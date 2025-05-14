@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Informasi PPDB 2025</h2>
+    <p>Pendaftaran Peserta Didik Baru SMK Karya Bangsa Sintang untuk tahun ajaran 2025 sudah dibuka.</p>
+
+    <div class="section vision-mission">
+        <h3>Visi & Misi</h3>
+        <div class="vision">
+            <h4>Visi</h4>
+            <p>"Menjadi SMK yang unggul dalam IPTEK berlandaskan IMTAQ, menghasilkan lulusan yang kompeten, berkarakter, dan mampu bersaing di era global"</p>
+        </div>
+        <div class="mission">
+            <h4>Misi</h4>
+            <ul>
+                <li>Meningkatkan kompetensi peserta didik yang berkarakter dan berakhlak mulia</li>
+                <li>Meningkatkan kualitas pembelajaran berbasis teknologi</li>
+                <li>Mengembangkan kerjasama dengan dunia usaha dan industri</li>
+                <li>Menciptakan lingkungan sekolah yang aman, bersih, dan kondusif</li>
+                <li>Mengembangkan jiwa kewirausahaan dan kemandirian</li>
+                <li>Meningkatkan profesionalisme tenaga pendidik dan kependidikan</li>
+                <li>Menyiapkan lulusan yang siap kerja, kuliah, dan berwirausaha</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section location">
+        <h3>Lokasi Kami</h3>
+        <div class="map-container">
+            <div class="map-info">
+                <p><i class="location-icon"></i> Pontianak - Sintang Km. 7, 78616 Sintang, Kalimantan Barat</p>
+                <a href="https://www.bing.com/maps?&ty=18&q=Smk%20Karya%20Bangsa%20Sintang&ss=ypid.YN7999x9687422290527985465&mb=0.036301~111.458498~0.030304~111.46691" 
+                   class="map-link" target="_blank">
+                    <img src="{{ url_for('static', filename='icons/map.png') }}" alt="Map Icon">
+                    Lihat di Maps
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section social-feed">
+        <h3>Media Sosial</h3>
+        <div class="instagram-feed">
+            <a href="https://www.instagram.com/smkkaryabangsa_" target="_blank" class="instagram-link">
+                <img src="{{ url_for('static', filename='icons/instagram.png') }}" alt="Instagram">
+                <span>@smkkaryabangsa_</span>
+            </a>
+            <div class="instagram-posts">
+                <!-- Instagram feed will be displayed here -->
+                <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/smkkaryabangsa_"></blockquote>
+            </div>
+        </div>
+    </div>
+
+    <div class="section achievements">
+        <h3>Keunggulan SMK Karya Bangsa Sintang</h3>
+        <div class="achievement-gallery">
+            <div class="achievement-item">
+                <img src="{{ url_for('static', filename='achievements/campus.jpg') }}" alt="GEDUNG">
+                <p>Lokasi Strategis di Jl. Sintang-Putussibau</p>
+            </div>
+            <div class="achievement-item">
+                <img src="{{ url_for('static', filename='achievements/lab.jpg') }}" alt="Fasilitas">
+                <p>Fasilitas Laboratorium Lengkap</p>
+            </div>
+            <div class="achievement-item">
+                <img src="{{ url_for('static', filename='achievements/industry.jpg') }}" alt="Industri">
+                <p>Kerjasama dengan Dunia Industri</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section programs">
+        <h3>Program Keahlian</h3>
+        <div class="program-gallery">
+            <div class="program-item">
+                <img src="{{ url_for('static', filename='programs/RPL.jpg') }}" alt="PPLG">
+                <h4>Pengembangan Perangkat Lunak dan Gim (PPLG)</h4>
+                <p>Program keahlian yang fokus pada pengembangan aplikasi, website, dan game dengan teknologi terkini.</p>
+                <ul class="program-features">
+                    <li>Pemrograman Web & Mobile</li>
+                    <li>Desain UI/UX</li>
+                    <li>Game Development</li>
+                </ul>
+            </div>
+            
+            <div class="program-item">
+                <img src="{{ url_for('static', filename='programs/HOTEL.jpg') }}" alt="Perhotelan">
+                <h4>Perhotelan</h4>
+                <p>Program keahlian yang mempersiapkan siswa untuk industri perhotelan dan hospitality.</p>
+                <ul class="program-features">
+                    <li>Hotel Operations</li>
+                    <li>Food & Beverage Service</li>
+                    <li>Hospitality Management</li>
+                </ul>
+            </div>
+            
+            <div class="program-item">
+                <img src="{{ url_for('static', filename='programs/BENGKEL.jpg') }}" alt="TBSM">
+                <h4>Teknik Bisnis Sepeda Motor (TBSM)</h4>
+                <p>Program keahlian yang membekali siswa dengan keterampilan mekanik sepeda motor modern.</p>
+                <ul class="program-features">
+                    <li>Perawatan Mesin Motor</li>
+                    <li>Sistem Kelistrikan</li>
+                    <li>Manajemen Bengkel</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script async src="//www.instagram.com/embed.js"></script>
+{% endblock %}

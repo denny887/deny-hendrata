@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Dashboard Admin</h2>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <h3>Daftar Calon Siswa</h3>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>Asal Sekolah</th>
+                <th>Tempat Lahir</th>
+                <th>Nilai</th>
+                <th>Status</th>
+                <th>Dokumen</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for siswa in siswa_data %}
+            <tr>
+                <td>{{ siswa.nama }}</td>
+                <td>{{ siswa.asal_sekolah }}</td>
+                <td>{{ siswa.tempat_lahir }}</td>
+                <td>{{ siswa.nilai }}</td>
+                <td>{{ siswa.status }}</td>
+                <td>
+                    {% if siswa.ijazah_file %}
+                        <a href="{{ url_for('static', filename='uploads/' + siswa.ijazah_file) }}" target="_blank">Ijazah</a>
+                    {% endif %}
+                    {% if siswa.bukti_pembayaran %}
+                        <a href="{{ url_for('static', filename='uploads/' + siswa.bukti_pembayaran) }}" target="_blank">Bukti Bayar</a>
+                    {% endif %}
+                    {% if siswa.rapor_file %}
+                        <a href="{{ url_for('static', filename='uploads/' + siswa.rapor_file) }}" target="_blank">Rapor</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if siswa.status == 'pending' %}
+                        <a href="{{ url_for('approve_siswa', siswa_id=siswa.id) }}" class="btn-approve">Terima</a>
+                        <a href="{{ url_for('reject_siswa', siswa_id=siswa.id) }}" class="btn-reject">Tolak</a>
+                    {% else %}
+                        {{ siswa.status }}
+                    {% endif %}
+                    <a href="{{ url_for('delete_siswa', siswa_id=siswa.id) }}" class="btn-delete" 
+                       onclick="return confirm('Apakah Anda yakin ingin menghapus data siswa ini?')">Hapus</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPDB SMK KARYA BANGSA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" 
+                 onerror="this.onerror=null; this.src='{{ url_for('static', filename='logo.png') }}'"
+                 alt="Logo SMK KARYA BANGSA">
+            <h1>Sistem PPDB SMK KARYA BANGSA 2025</h1>
+            <p class="tagline">Menyiapkan Generasi Emas untuk Masa Depan</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Beranda</a>
+            {% if not session.get('user_id') %}
+                <a href="{{ url_for('register') }}">Daftar</a>
+                <a href="{{ url_for('login') }}" class="btn-user">Login Siswa</a>
+                <a href="{{ url_for('admin_login') }}" class="btn-admin-nav">Login Admin</a>
+            {% elif session.get('role') == 'admin' %}
+                <a href="{{ url_for('admin.dashboard') }}">Dashboard Admin</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('user.dashboard') }}">Dashboard Siswa</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section contact">
+                <h4>Kontak Kami</h4>
+                <p>SMK KARYA BANGSA</p>
+                <p>Jl. Pendidikan No. 123, Kebumen</p>
+                <p><i class="phone-icon"></i> 081549395400</p>
+                <p><i class="business-icon"></i> (0655) 7728656</p>
+                <p>Email: info@smkkaryabangsa.sch.id</p>
+            </div>
+            <div class="footer-section social">
+                <h4>Media Sosial</h4>
+                <div class="social-links">
+                    <a href="https://instagram.com/smkkaryabangsa" target="_blank" class="social-link">
+                        <img src="{{ url_for('static', filename='icons/instagram.png') }}" alt="Instagram">
+                        <span>@smkkaryabangsa</span>
+                    </a>
+                    <a href="mailto:info@smkkaryabangsa.sch.id" class="social-link">
+                        <img src="{{ url_for('static', filename='icons/email.png') }}" alt="Email">
+                        <span>info@smkkaryabangsa.sch.id</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 SMK KARYA BANGSA. Semua hak dilindungi.</p>
+        </div>
+    </footer>
+</body>
+</html>
