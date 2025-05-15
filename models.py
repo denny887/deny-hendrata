@@ -26,3 +26,31 @@ class Chat(db.Model):
     message = db.Column(db.Text, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+class SchoolSettings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    registration_open = db.Column(db.Boolean, default=True)
+    academic_year = db.Column(db.String(10))
+    quota = db.Column(db.Integer)
+
+class PpdbSettings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    registration_open = db.Column(db.Boolean, default=True)
+    academic_year = db.Column(db.String(10))
+    quota_per_major = db.Column(db.Integer)
+    announcement_title = db.Column(db.String(200))
+    announcement_content = db.Column(db.Text)
+    show_announcement = db.Column(db.Boolean, default=False)
+
+class Major(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    quota = db.Column(db.Integer)
+    active = db.Column(db.Boolean, default=True)
+    
+class Registration(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    siswa_id = db.Column(db.Integer, db.ForeignKey('siswa.id'))
+    major_id = db.Column(db.Integer, db.ForeignKey('major.id'))
+    registration_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    status = db.Column(db.String(20), default='pending')

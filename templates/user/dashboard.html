@@ -1,76 +1,192 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Dashboard Calon Siswa</h2>
-    
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-    <p>Selamat datang! Silakan lengkapi data berikut untuk pendaftaran.</p>
-
-    <form method="POST" enctype="multipart/form-data">
-        <label for="nama">Nama:</label>
-        <input type="text" name="nama" id="nama" required>
-        <br>
-        <label for="asal_sekolah">Asal Sekolah:</label>
-        <input type="text" name="asal_sekolah" id="asal_sekolah" required>
-        <br>
-        <label for="tempat_lahir">Tempat Lahir:</label>
-        <input type="text" name="tempat_lahir" id="tempat_lahir" required>
-        <br>
-        <label for="nilai">Nilai:</label>
-        <input type="number" name="nilai" id="nilai" required>
-        <br>
-        <label for="ijazah">Ijazah (PDF/JPG/PNG):</label>
-        <input type="file" name="ijazah" id="ijazah" accept=".pdf,.jpg,.jpeg,.png" required>
-        <br>
-        <label for="bukti_pembayaran">Bukti Pembayaran (PDF/JPG/PNG):</label>
-        <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" accept=".pdf,.jpg,.jpeg,.png" required>
-        <br>
-        <label for="rapor">Nilai Rapor (PDF/JPG/PNG):</label>
-        <input type="file" name="rapor" id="rapor" accept=".pdf,.jpg,.jpeg,.png" required>
-        <br>
-        <input type="submit" value="Kirim Data">
-    </form>
-
-    <h3>Data Anda</h3>
-    <ul>
-        {% for s in siswa_data %}
-            <li>
-                {{ s.nama }} - {{ s.asal_sekolah }} - {{ s.tempat_lahir }} - Nilai: {{ s.nilai }} - Status: {{ s.status }}
-                <br>
-                {% if s.ijazah_file %}
-                    <a href="{{ url_for('static', filename='uploads/' + s.ijazah_file) }}" target="_blank">Lihat Ijazah</a>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h2>Dashboard Calon Siswa</h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
                 {% endif %}
-                {% if s.bukti_pembayaran %}
-                    <a href="{{ url_for('static', filename='uploads/' + s.bukti_pembayaran) }}" target="_blank">Lihat Bukti Pembayaran</a>
-                {% endif %}
-                {% if s.rapor_file %}
-                    <a href="{{ url_for('static', filename='uploads/' + s.rapor_file) }}" target="_blank">Lihat Rapor</a>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-
-    <div class="chat-section">
-        <h3>Chat dengan Admin</h3>
-        <div class="chat-messages" id="chatMessages">
-            {% for chat in chats %}
-                <div class="message {% if chat.is_admin %}admin{% else %}user{% endif %}">
-                    <p>{{ chat.message }}</p>
-                    <span class="timestamp">{{ chat.timestamp.strftime('%H:%M %d/%m/%Y') }}</span>
-                </div>
-            {% endfor %}
+            {% endwith %}
         </div>
-        <form method="POST" action="{{ url_for('user.send_message') }}" class="chat-form">
-            <input type="text" name="message" placeholder="Ketik pesan..." required>
-            <button type="submit">Kirim</button>
-        </form>
-    </div>
 
+        <div class="registration-form">
+            <p>Selamat datang! Silakan lengkapi data berikut untuk pendaftaran.</p>
+            <form method="POST" enctype="multipart/form-data" class="needs-validation">
+                <div class="form-group">
+                    <label for="nama">Nama Lengkap:</label>
+                    <input type="text" name="nama" id="nama" pattern="[A-Za-z\s]{3,50}" 
+                           title="Nama harus berupa huruf (3-50 karakter)" required>
+                </div>
+                <div class="form-group">
+                    <label for="asal_sekolah">Asal Sekolah:</label>
+                    <input type="text" name="asal_sekolah" id="asal_sekolah" required>
+                </div>
+                <div class="form-group">
+                    <label for="tempat_lahir">Tempat Lahir:</label>
+                    <input type="text" name="tempat_lahir" id="tempat_lahir" required>
+                </div>
+                <div class="form-group">
+                    <label for="nilai">Nilai:</label>
+                    <input type="number" name="nilai" id="nilai" required>
+                </div>
+                <div class="form-group">
+                    <label for="ijazah">Ijazah (PDF/JPG/PNG):</label>
+                    <input type="file" name="ijazah" id="ijazah" accept=".pdf,.jpg,.jpeg,.png" required>
+                </div>
+                <div class="form-group">
+                    <label for="bukti_pembayaran">Bukti Pembayaran (PDF/JPG/PNG):</label>
+                    <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" accept=".pdf,.jpg,.jpeg,.png" required>
+                </div>
+                <div class="form-group">
+                    <label for="rapor">Nilai Rapor (PDF/JPG/PNG):</label>
+                    <input type="file" name="rapor" id="rapor" accept=".pdf,.jpg,.jpeg,.png" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Kirim Data</button>
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+            </form>
+        </div>
+
+        <h3>Data Anda</h3>
+        <ul>
+            {% for s in siswa_data %}
+                <li>
+                    {{ s.nama }} - {{ s.asal_sekolah }} - {{ s.tempat_lahir }} - Nilai: {{ s.nilai }} - Status: {{ s.status }}
+                    <br>
+                    {% if s.ijazah_file %}
+                        <a href="{{ url_for('static', filename='uploads/' + s.ijazah_file) }}" target="_blank">Lihat Ijazah</a>
+                    {% endif %}
+                    {% if s.bukti_pembayaran %}
+                        <a href="{{ url_for('static', filename='uploads/' + s.bukti_pembayaran) }}" target="_blank">Lihat Bukti Pembayaran</a>
+                    {% endif %}
+                    {% if s.rapor_file %}
+                        <a href="{{ url_for('static', filename='uploads/' + s.rapor_file) }}" target="_blank">Lihat Rapor</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="chat-section">
+            <h3>Chat dengan Admin</h3>
+            <div class="chat-messages" id="chatMessages">
+                {% for chat in chats %}
+                    <div class="message {% if chat.is_admin %}admin{% else %}user{% endif %}">
+                        <p>{{ chat.message }}</p>
+                        <span class="timestamp">{{ chat.timestamp.strftime('%H:%M %d/%m/%Y') }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            <form method="POST" action="{{ url_for('user.send_message') }}" class="chat-form">
+                <input type="text" name="message" placeholder="Ketik pesan..." required>
+                <button type="submit">Kirim</button>
+            </form>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="section vision-mission">
+                <h3>Visi & Misi</h3>
+                <div class="vision">
+                    <h4>Visi</h4>
+                    <p>"Menjadi SMK yang unggul dalam IPTEK berlandaskan IMTAQ, menghasilkan lulusan yang kompeten, berkarakter, dan mampu bersaing di era global"</p>
+                </div>
+                <div class="mission">
+                    <h4>Misi</h4>
+                    <ul>
+                        <li>Meningkatkan kompetensi peserta didik yang berkarakter dan berakhlak mulia</li>
+                        <li>Meningkatkan kualitas pembelajaran berbasis teknologi</li>
+                        <li>Mengembangkan kerjasama dengan dunia usaha dan industri</li>
+                        <li>Menciptakan lingkungan sekolah yang aman, bersih, dan kondusif</li>
+                        <li>Mengembangkan jiwa kewirausahaan dan kemandirian</li>
+                        <li>Meningkatkan profesionalisme tenaga pendidik dan kependidikan</li>
+                        <li>Menyiapkan lulusan yang siap kerja, kuliah, dan berwirausaha</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section programs">
+                <h3>Program Keahlian</h3>
+                <div class="program-gallery">
+                    <div class="program-item">
+                        <img src="{{ url_for('static', filename='programs/RPL.jpg') }}" alt="PPLG">
+                        <h4>Pengembangan Perangkat Lunak dan Gim (PPLG)</h4>
+                        <p>Program keahlian yang fokus pada pengembangan aplikasi, website, dan game dengan teknologi terkini.</p>
+                        <ul class="program-features">
+                            <li>Pemrograman Web & Mobile</li>
+                            <li>Desain UI/UX</li>
+                            <li>Game Development</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="program-item">
+                        <img src="{{ url_for('static', filename='programs/HOTEL.jpg') }}" alt="Perhotelan">
+                        <h4>Perhotelan</h4>
+                        <p>Program keahlian yang mempersiapkan siswa untuk industri perhotelan dan hospitality.</p>
+                        <ul class="program-features">
+                            <li>Hotel Operations</li>
+                            <li>Food & Beverage Service</li>
+                            <li>Hospitality Management</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="program-item">
+                        <img src="{{ url_for('static', filename='programs/BENGKEL.jpg') }}" alt="TBSM">
+                        <h4>Teknik Bisnis Sepeda Motor (TBSM)</h4>
+                        <p>Program keahlian yang membekali siswa dengan keterampilan mekanik sepeda motor modern.</p>
+                        <ul class="program-features">
+                            <li>Perawatan Mesin Motor</li>
+                            <li>Sistem Kelistrikan</li>
+                            <li>Manajemen Bengkel</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section location">
+                <h3>Lokasi Kami</h3>
+                <div class="map-container">
+                    <div class="map-info">
+                        <p><i class="location-icon"></i> Pontianak - Sintang Km. 7, 78616 Sintang, Kalimantan Barat</p>
+                        <a href="https://www.bing.com/maps?&ty=18&q=Smk%20Karya%20Bangsa%20Sintang&ss=ypid.YN7999x9687422290527985465&mb=0.036301~111.458498~0.030304~111.46691" 
+                           class="map-link" target="_blank">
+                            <img src="{{ url_for('static', filename='icons/map.png') }}" alt="Map Icon">
+                            Lihat di Maps
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section social-feed">
+                <h3>Media Sosial</h3>
+                <div class="instagram-feed">
+                    <a href="https://www.instagram.com/smkkaryabangsa_" target="_blank" class="instagram-link">
+                        <img src="{{ url_for('static', filename='icons/instagram.png') }}" alt="Instagram">
+                        <span>@smkkaryabangsa_</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Add client-side validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+    for (let input of fileInputs) {
+        if (input.files.length > 0 && input.files[0].size > 5 * 1024 * 1024) {
+            e.preventDefault();
+            alert('Ukuran file tidak boleh lebih dari 5MB');
+            return;
+        }
+    }
+});
+</script>
+{{ super() }}
+<script async src="//www.instagram.com/embed.js"></script>
 {% endblock %}

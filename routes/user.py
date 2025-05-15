@@ -1,8 +1,13 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, session, request
+from flask import Blueprint, render_template, redirect, url_for, flash, session, request, current_app
 from models import db, Siswa, Chat
+from werkzeug.utils import secure_filename
 import os
+import re
 
 user = Blueprint('user', __name__, url_prefix='/user')
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'pdf', 'jpg', 'jpeg', 'png'}
 
 @user.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
@@ -11,9 +16,44 @@ def dashboard():
         return redirect(url_for('login'))
         
     if request.method == 'POST':
-        # Handle file uploads and form submission
-        # ...existing file upload code...
-        pass  # Placeholder to avoid indentation error
+        try:
+            # Validate input
+            nama = request.form.get('nama')
+            if not re.match(r'^[a-zA-Z\s]{3,50}$', nama):
+                flash('Nama tidak valid', 'error')
+                return redirect(url_for('user.dashboard'))
+                
+            files = {'ijazah': request.files.get('ijazah'),
+                    'bukti_pembayaran': request.files.get('bukti_pembayaran'),
+                    'rapor': request.files.get('rapor')}
+            
+            file_paths = {}
+            for file_type, file in files.items():
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(f"{session['user_id']}_{file_type}_{file.filename}")
+                    filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                    file.save(filepath)
+                    file_paths[f"{file_type}_file"] = filename
+                else:
+                    flash(f'File {file_type} tidak valid', 'error')
+                    return redirect(url_for('user.dashboard'))
+
+            siswa = Siswa(
+                nama=nama,
+                asal_sekolah=request.form.get('asal_sekolah'),
+                tempat_lahir=request.form.get('tempat_lahir'),
+                nilai=int(request.form.get('nilai')),
+                user_id=session['user_id'],
+                **file_paths
+            )
+            db.session.add(siswa)
+            db.session.commit()
+            flash('Data berhasil disimpan', 'success')
+            
+        except Exception as e:
+            db.session.rollback()
+            flash('Terjadi kesalahan, silakan coba lagi', 'error')
+            print(f"Error: {str(e)}")
         
     siswa_data = Siswa.query.filter_by(user_id=session['user_id']).all()
     chats = Chat.query.filter_by(user_id=session['user_id']).order_by(Chat.timestamp).all()

@@ -24,12 +24,51 @@
                 <a href="{{ url_for('register') }}">Daftar</a>
                 <a href="{{ url_for('login') }}" class="btn-user">Login Siswa</a>
                 <a href="{{ url_for('admin_login') }}" class="btn-admin-nav">Login Admin</a>
+                <div class="dropdown">
+                    <button class="dropbtn">PPDB Yayasan Karya Bangsa</button>
+                    <div class="dropdown-content school-links">
+                        <div class="school-section">
+                            <h4>SMK Karya Bangsa</h4>
+                            <p>Program: PPLG, HOTEL, TBSM</p>
+                            <a href="{{ url_for('index') }}" class="school-link current">Daftar SMK</a>
+                        </div>
+                        <div class="school-section">
+                            <h4>SMA Karya Bangsa</h4>
+                            <p>Program: IPA, IPS</p>
+                            <a href="https://sma.karyabangsa.sch.id" class="school-link">Daftar SMA</a>
+                        </div>
+                        <div class="school-section">
+                            <h4>SMP Karya Bangsa</h4>
+                            <p>Akreditasi: A</p>
+                            <a href="https://smp.karyabangsa.sch.id" class="school-link">Daftar SMP</a>
+                        </div>
+                        <div class="school-section">
+                            <h4>SD Karya Bangsa</h4>
+                            <p>Akreditasi: A</p>
+                            <a href="https://sd.karyabangsa.sch.id" class="school-link">Daftar SD</a>
+                        </div>
+                    </div>
+                </div>
             {% elif session.get('role') == 'admin' %}
                 <a href="{{ url_for('admin.dashboard') }}">Dashboard Admin</a>
-                <a href="{{ url_for('logout') }}">Logout</a>
+                <div class="dropdown">
+                    <button class="dropbtn">Pengaturan</button>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('admin.settings') }}">Pengaturan PPDB</a>
+                        <a href="{{ url_for('admin.school_settings') }}">Pengaturan Sekolah</a>
+                    </div>
+                </div>
             {% else %}
                 <a href="{{ url_for('user.dashboard') }}">Dashboard Siswa</a>
-                <a href="{{ url_for('logout') }}">Logout</a>
+                <div class="dropdown">
+                    <button class="dropbtn">PPDB Yayasan Karya Bangsa</button>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('index') }}">SMK Karya Bangsa</a>
+                        <a href="https://sma.karyabangsa.sch.id">SMA Karya Bangsa</a>
+                        <a href="https://smp.karyabangsa.sch.id">SMP Karya Bangsa</a>
+                        <a href="https://sd.karyabangsa.sch.id">SD Karya Bangsa</a>
+                    </div>
+                </div>
             {% endif %}
         </div>
     </nav>
