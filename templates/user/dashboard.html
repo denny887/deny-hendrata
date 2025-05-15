@@ -4,52 +4,99 @@
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h2>Dashboard Calon Siswa</h2>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+            <a href="{{ url_for('auth.logout') }}" class="btn-logout">
+                <i class="logout-icon"></i>
+                Logout
+            </a>
         </div>
 
-        <div class="registration-form">
-            <p>Selamat datang! Silakan lengkapi data berikut untuk pendaftaran.</p>
-            <form method="POST" enctype="multipart/form-data" class="needs-validation">
-                <div class="form-group">
-                    <label for="nama">Nama Lengkap:</label>
-                    <input type="text" name="nama" id="nama" pattern="[A-Za-z\s]{3,50}" 
-                           title="Nama harus berupa huruf (3-50 karakter)" required>
+        <!-- Move QRIS Payment section to top -->
+        <div class="payment-section">
+            <h3>Pembayaran PPDB</h3>
+            <div class="payment-card">
+                <div class="qris-container">
+                    <div class="qris-code-wrapper">
+                        <img src="{{ url_for('static', filename='images/qris-code.png') }}" alt="QRIS Code" class="qris-code">
+                        <button class="btn-download">
+                            <i class="download-icon"></i>
+                            Download QRIS
+                        </button>
+                    </div>
+                    <div class="payment-details">
+                        <div class="payment-amount">
+                            <h4>Total Pembayaran</h4>
+                            <div class="amount">Rp. 200.000</div>
+                        </div>
+                        <div class="payment-info">
+                            <h4>Informasi Pembayaran</h4>
+                            <ul>
+                                <li>Merchant ID: SMK KARYA BANGSA</li>
+                                <li>Diterima di semua bank dan e-wallet</li>
+                                <li>Pembayaran akan diverifikasi otomatis</li>
+                            </ul>
+                        </div>
+                        <div class="payment-steps">
+                            <h4>Cara Pembayaran:</h4>
+                            <ol>
+                                <li>Buka aplikasi e-wallet atau m-banking Anda</li>
+                                <li>Pilih menu Scan QRIS</li>
+                                <li>Scan kode QR di atas</li>
+                                <li>Masukkan nominal sesuai total pembayaran</li>
+                                <li>Periksa detail transaksi</li>
+                                <li>Masukkan PIN/password Anda</li>
+                                <li>Upload bukti pembayaran di bawah ini</li>
+                            </ol>
+                        </div>
+                        <div class="upload-payment">
+                            <form method="POST" enctype="multipart/form-data" class="payment-form">
+                                <div class="form-group">
+                                    <label for="bukti_pembayaran">Upload Bukti Pembayaran:</label>
+                                    <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" 
+                                           accept=".pdf,.jpg,.jpeg,.png" required>
+                                </div>
+                                <button type="submit" class="btn-submit-payment">Upload Bukti Pembayaran</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="asal_sekolah">Asal Sekolah:</label>
-                    <input type="text" name="asal_sekolah" id="asal_sekolah" required>
-                </div>
-                <div class="form-group">
-                    <label for="tempat_lahir">Tempat Lahir:</label>
-                    <input type="text" name="tempat_lahir" id="tempat_lahir" required>
-                </div>
-                <div class="form-group">
-                    <label for="nilai">Nilai:</label>
-                    <input type="number" name="nilai" id="nilai" required>
-                </div>
-                <div class="form-group">
-                    <label for="ijazah">Ijazah (PDF/JPG/PNG):</label>
-                    <input type="file" name="ijazah" id="ijazah" accept=".pdf,.jpg,.jpeg,.png" required>
-                </div>
-                <div class="form-group">
-                    <label for="bukti_pembayaran">Bukti Pembayaran (PDF/JPG/PNG):</label>
-                    <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" accept=".pdf,.jpg,.jpeg,.png" required>
-                </div>
-                <div class="form-group">
-                    <label for="rapor">Nilai Rapor (PDF/JPG/PNG):</label>
-                    <input type="file" name="rapor" id="rapor" accept=".pdf,.jpg,.jpeg,.png" required>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Kirim Data</button>
-                    <button type="reset" class="btn btn-secondary">Reset</button>
-                </div>
-            </form>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <div class="registration-form">
+                <h3>Form Pendaftaran</h3>
+                <form method="POST" enctype="multipart/form-data" class="needs-validation">
+                    <div class="form-group">
+                        <label for="nama">Nama Lengkap:</label>
+                        <input type="text" name="nama" id="nama" pattern="[A-Za-z\s]{3,50}" 
+                               title="Nama harus berupa huruf (3-50 karakter)" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="asal_sekolah">Asal Sekolah:</label>
+                        <input type="text" name="asal_sekolah" id="asal_sekolah" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tempat_lahir">Tempat Lahir:</label>
+                        <input type="text" name="tempat_lahir" id="tempat_lahir" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nilai">Nilai:</label>
+                        <input type="number" name="nilai" id="nilai" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ijazah">Ijazah (PDF/JPG/PNG):</label>
+                        <input type="file" name="ijazah" id="ijazah" accept=".pdf,.jpg,.jpeg,.png" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rapor">Nilai Rapor (PDF/JPG/PNG):</label>
+                        <input type="file" name="rapor" id="rapor" accept=".pdf,.jpg,.jpeg,.png" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Kirim Data</button>
+                        <button type="reset" class="btn btn-secondary">Reset</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <h3>Data Anda</h3>
@@ -163,9 +210,9 @@
             <div class="section social-feed">
                 <h3>Media Sosial</h3>
                 <div class="instagram-feed">
-                    <a href="https://www.instagram.com/smkkaryabangsa_" target="_blank" class="instagram-link">
+                    <a href="https://instagram.com/karyabangsa.stg" target="_blank" class="instagram-link">
                         <img src="{{ url_for('static', filename='icons/instagram.png') }}" alt="Instagram">
-                        <span>@smkkaryabangsa_</span>
+                        <span>@karyabangsa.stg</span>
                     </a>
                 </div>
             </div>

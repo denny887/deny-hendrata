@@ -6,6 +6,8 @@ from models import db, User, Siswa
 import re
 from routes.admin import admin
 from routes.user import user
+from routes.auth import auth
+from routes.main import main
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'  # Add this line for session management
@@ -75,148 +77,38 @@ def verify_static_files():
 # Register blueprints
 app.register_blueprint(admin)
 app.register_blueprint(user)
+app.register_blueprint(auth)
+app.register_blueprint(main)
 
-# Keep only general routes in app.py
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/admin-login', methods=['GET', 'POST'])
-def admin_login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        
-        print(f"Admin login attempt - username: {username}")  # Debug print
-        
-        admin = User.query.filter_by(username=username, role='admin').first()
-        if admin and password == 'admin123':  # Direct password comparison for admin
-            session['user_id'] = admin.id
-            session['role'] = 'admin'
-            print("Admin login successful")  # Debug print
-            return redirect(url_for('admin.dashboard'))
-            
-        flash('Username atau password admin salah!', 'error')
-        print("Admin login failed")  # Debug print
-    return render_template('admin/login.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        
-        user = User.query.filter_by(username=username).first()
-        if user and user.role == 'user' and check_password_hash(user.password, password):
-            session['user_id'] = user.id
-            session['role'] = user.role
-            return redirect(url_for('user.dashboard'))
-        else:
-            flash('Username atau password salah!', 'error')
-            return redirect(url_for('login'))
-    return render_template('user/login.html')
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        
-        # Validate email format
-        if not username.endswith(('@gmail.com', '@yahoo.com', '@hotmail.com')):
-            flash('Email harus menggunakan domain @gmail.com, @yahoo.com, atau @hotmail.com', 'error')
-            return render_template('register.html')
-        
-        # Check if user already exists
-        if User.query.filter_by(username=username).first():
-            flash('Email sudah terdaftar!', 'error')
-            return render_template('register.html')
-            
-        # Create new user
-        hashed_password = generate_password_hash(password)
-        new_user = User(username=username, password=hashed_password, role='user')
-        db.session.add(new_user)
-        db.session.commit()
-        
-        flash('Pendaftaran berhasil! Silakan login.', 'success')
-        return redirect(url_for('login'))
-    return render_template('register.html')
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('index'))
+# Remove the routes that were moved to blueprints
 
 # Add basic logging
 @app.before_request
 def before_request():
     print(f"Incoming {request.method} request to {request.path}")
 
+def create_tables():
+    with app.app_context():
+        db.create_all()
+        # Create initial PPDB settings if not exists
+        from models import PpdbSettings
+        if not PpdbSettings.query.first():
+            initial_settings = PpdbSettings(
+                registration_open=True,
+                academic_year="2024/2025",
+                quota_per_major=40,
+                announcement_title="Pengumuman PPDB",
+                announcement_content="Selamat datang di PPDB SMK Karya Bangsa",
+                show_announcement=True
+            )
+            db.session.add(initial_settings)
+            db.session.commit()
+
 # Modify the main run section at the bottom
 if __name__ == '__main__':
-    try:
-        with app.app_context():
-            # Check if tables need to be created
-            db_file = os.path.join(db_dir, "ppdb.db")
-            db_exists = os.path.exists(db_file)
-            
-            # Create tables if database doesn't exist
-            if not db_exists:
-                db.create_all()
-                print("New database tables created")
-                
-                # Create admin account
-                admin_exists = User.query.filter_by(username='admin@admin.com').first()
-                if not admin_exists:
-                    admin = User(
-                        username='admin@admin.com',
-                        password='admin123',
-                        role='admin'
-                    )
-                    db.session.add(admin)
-                    db.session.commit()
-                    print("Admin account created successfully")
-            
-            # Create required static files structure
-            for folder in ['programs', 'achievements', 'icons']:
-                folder_path = os.path.join(app.static_folder, folder)
-                os.makedirs(folder_path, exist_ok=True)
-            
-            # Create placeholder images if missing
-            placeholder_image = os.path.join(app.static_folder, 'placeholder.png')
-            if not os.path.exists(placeholder_image):
-                from PIL import Image, ImageDraw
-                img = Image.new('RGB', (300, 200), color='gray')
-                d = ImageDraw.Draw(img)
-                d.text((100, 100), "Placeholder Image", fill='white')
-                img.save(placeholder_image)
-            
-            # Create symlinks to placeholder for missing images
-            required_images = {
-                'programs': ['RPL.jpg', 'HOTEL.jpg', 'BENGKEL.jpg'],
-                'achievements': ['campus.jpg', 'lab.jpg', 'industry.jpg'],
-                'icons': ['instagram.png', 'map.png'],
-                '.': ['logo.png']
-            }
-            
-            for folder, files in required_images.items():
-                folder_path = os.path.join(app.static_folder, folder)
-                for file in files:
-                    file_path = os.path.join(folder_path, file)
-                    if not os.path.exists(file_path):
-                        try:
-                            os.symlink(placeholder_image, file_path)
-                        except OSError:
-                            import shutil
-                            shutil.copy(placeholder_image, file_path)
-            
-            verify_static_files()
-        
-        app.run(
-            host='127.0.0.1',
-            port=5000,
-            debug=True
-        )
-    except Exception as e:
-        print(f"Server startup error: {e}")
-        raise e
+    create_tables()
+    app.run(
+        host='127.0.0.1',
+        port=5000,
+        debug=True
+    )

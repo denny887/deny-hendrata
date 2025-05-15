@@ -4,8 +4,8 @@
 <div class="auth-layout">
     <div class="auth-card">
         <div class="auth-header">
-            <h2>Login Siswa</h2>
-            <p class="auth-subtitle">Masuk ke akun PPDB anda</p>
+            <h2>Login Admin</h2>
+            <p class="auth-subtitle">Panel Administrasi PPDB</p>
         </div>
 
         {% with messages = get_flashed_messages() %}
@@ -18,19 +18,15 @@
 
         <form method="POST" class="auth-form">
             <div class="form-group">
-                <label for="username">Email:</label>
-                <input type="email" name="username" id="username" placeholder="Masukkan email anda" required>
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" placeholder="Masukkan username admin" required>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" name="password" id="password" placeholder="Masukkan password" required>
             </div>
-            <button type="submit" class="btn-auth">Login</button>
+            <button type="submit" class="btn-auth">Login Admin</button>
         </form>
-
-        <div class="auth-footer">
-            <p>Belum punya akun? <a href="{{ url_for('register') }}">Daftar Sekarang</a></p>
-        </div>
     </div>
 </div>
 {% endblock %}

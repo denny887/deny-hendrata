@@ -13,7 +13,7 @@ def allowed_file(filename):
 def dashboard():
     if 'user_id' not in session or session.get('role') != 'user':
         flash('Silakan login terlebih dahulu', 'error')
-        return redirect(url_for('login'))
+        return redirect(url_for('auth.login'))
         
     if request.method == 'POST':
         try:

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, session, request
-from models import db, Siswa, User, Chat, SchoolSettings, PpdbSettings, Major
+from models import db, Siswa, User, Chat, PpdbSettings
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -7,10 +7,16 @@ admin = Blueprint('admin', __name__, url_prefix='/admin')
 def dashboard():
     if 'user_id' not in session or session.get('role') != 'admin':
         flash('Akses ditolak. Anda harus login sebagai admin.', 'error')
-        return redirect(url_for('login'))
+        return redirect(url_for('auth.login'))
         
-    siswa_data = Siswa.query.all()
-    return render_template('admin/dashboard.html', siswa_data=siswa_data)
+    # Get all students data including pending, approved, and rejected
+    siswa_data = Siswa.query.order_by(Siswa.id.desc()).all()
+    # Get all users for chat functionality
+    users = User.query.filter_by(role='user').all()
+    
+    return render_template('admin/dashboard.html', 
+                         siswa_data=siswa_data,
+                         users=users)
 
 @admin.route('/approve/<int:siswa_id>')
 def approve_siswa(siswa_id):
@@ -80,74 +86,32 @@ def send_message(user_id):
         
     return redirect(url_for('admin.chat', user_id=user_id))
 
-@admin.route('/settings', methods=['GET'])
+@admin.route('/settings', methods=['GET', 'POST'])
 def settings():
     if not is_admin():
         return redirect(url_for('login'))
-    settings = PpdbSettings.query.first()
-    majors = Major.query.filter_by(active=True).all()
-    return render_template('admin/settings.html', settings=settings, majors=majors)
-
-@admin.route('/update-settings', methods=['POST'])
-def update_settings():
-    if not is_admin():
-        return redirect(url_for('login'))
         
     settings = PpdbSettings.query.first()
-    if not settings:
-        settings = PpdbSettings()
-        db.session.add(settings)
-        
-    settings.registration_open = request.form.get('registration_status') == 'open'
-    settings.academic_year = request.form.get('academic_year')
-    settings.quota_per_major = request.form.get('quota_per_major', type=int)
-    
-    db.session.commit()
-    flash('Pengaturan berhasil diperbarui', 'success')
-    return redirect(url_for('admin.settings'))
-
-@admin.route('/update-majors', methods=['POST'])
-def update_majors():
-    if not is_admin():
-        return redirect(url_for('login'))
-        
-    major_names = request.form.getlist('major_name[]')
-    major_quotas = request.form.getlist('major_quota[]')
-    
-    # Deactivate all existing majors
-    Major.query.update({Major.active: False})
-    
-    # Add or update majors
-    for name, quota in zip(major_names, major_quotas):
-        if name:
-            major = Major.query.filter_by(name=name).first()
-            if not major:
-                major = Major(name=name)
-            major.quota = int(quota)
-            major.active = True
-            db.session.add(major)
+    if request.method == 'POST':
+        try:
+            if not settings:
+                settings = PpdbSettings()
+                db.session.add(settings)
+                
+            settings.registration_open = request.form.get('registration_status') == 'open'
+            settings.academic_year = request.form.get('academic_year')
+            settings.quota_per_major = request.form.get('quota_per_major', type=int)
+            settings.announcement_title = request.form.get('announcement_title')
+            settings.announcement_content = request.form.get('announcement_content')
+            settings.show_announcement = request.form.get('show_announcement') == 'show'
             
-    db.session.commit()
-    flash('Program keahlian berhasil diperbarui', 'success')
-    return redirect(url_for('admin.settings'))
-
-@admin.route('/update-announcement', methods=['POST'])
-def update_announcement():
-    if not is_admin():
-        return redirect(url_for('login'))
-        
-    settings = PpdbSettings.query.first()
-    if not settings:
-        settings = PpdbSettings()
-        db.session.add(settings)
-        
-    settings.announcement_title = request.form.get('announcement_title')
-    settings.announcement_content = request.form.get('announcement_content')
-    settings.show_announcement = request.form.get('announcement_status') == 'show'
-    
-    db.session.commit()
-    flash('Pengumuman berhasil diperbarui', 'success')
-    return redirect(url_for('admin.settings'))
+            db.session.commit()
+            flash('Pengaturan berhasil diperbarui', 'success')
+        except:
+            db.session.rollback()
+            flash('Gagal memperbarui pengaturan', 'error')
+            
+    return render_template('admin/settings.html', settings=settings)
 
 def is_admin():
     return 'user_id' in session and session.get('role') == 'admin'

@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Dashboard Calon Siswa</h2>
-    
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h2>Dashboard Calon Siswa</h2>
+        <a href="{{ url_for('auth.logout') }}" class="btn-logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
@@ -11,49 +17,110 @@
         {% endif %}
     {% endwith %}
 
-    <p>Selamat datang! Silakan lengkapi data berikut untuk pendaftaran.</p>
+    <div class="dashboard-content">
+        <!-- Registration Form Section -->
+        <div class="registration-panel">
+            <h3>Form Pendaftaran</h3>
+            <p class="form-intro">Silakan lengkapi data berikut untuk pendaftaran</p>
 
-    <form method="POST" enctype="multipart/form-data">
-        <label for="nama">Nama:</label>
-        <input type="text" name="nama" id="nama" required>
-        <br>
-        <label for="asal_sekolah">Asal Sekolah:</label>
-        <input type="text" name="asal_sekolah" id="asal_sekolah" required>
-        <br>
-        <label for="tempat_lahir">Tempat Lahir:</label>
-        <input type="text" name="tempat_lahir" id="tempat_lahir" required>
-        <br>
-        <label for="nilai">Nilai:</label>
-        <input type="number" name="nilai" id="nilai" required>
-        <br>
-        <label for="ijazah">Ijazah (PDF/JPG/PNG):</label>
-        <input type="file" name="ijazah" id="ijazah" accept=".pdf,.jpg,.jpeg,.png" required>
-        <br>
-        <label for="bukti_pembayaran">Bukti Pembayaran (PDF/JPG/PNG):</label>
-        <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" accept=".pdf,.jpg,.jpeg,.png" required>
-        <br>
-        <label for="rapor">Nilai Rapor (PDF/JPG/PNG):</label>
-        <input type="file" name="rapor" id="rapor" accept=".pdf,.jpg,.jpeg,.png" required>
-        <br>
-        <input type="submit" value="Kirim Data">
-    </form>
+            <form method="POST" enctype="multipart/form-data" class="registration-form">
+                <div class="form-grid">
+                    <!-- Input Fields -->
+                    <div class="form-group">
+                        <label for="nama">Nama Lengkap:</label>
+                        <input type="text" name="nama" id="nama" placeholder="Masukkan nama lengkap" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="asal_sekolah">Asal Sekolah:</label>
+                        <input type="text" name="asal_sekolah" id="asal_sekolah" placeholder="Nama sekolah asal" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tempat_lahir">Tempat Lahir:</label>
+                        <input type="text" name="tempat_lahir" id="tempat_lahir" placeholder="Kota kelahiran" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nilai">Nilai Rata-rata:</label>
+                        <input type="number" name="nilai" id="nilai" min="0" max="100" placeholder="Nilai rata-rata rapor" required>
+                    </div>
+                </div>
 
-    <h3>Data Anda</h3>
-    <ul>
-        {% for s in siswa_data %}
-            <li>
-                {{ s.nama }} - {{ s.asal_sekolah }} - {{ s.tempat_lahir }} - Nilai: {{ s.nilai }} - Status: {{ s.status }}
-                <br>
-                {% if s.ijazah_file %}
-                    <a href="{{ url_for('static', filename='uploads/' + s.ijazah_file) }}" target="_blank">Lihat Ijazah</a>
-                {% endif %}
-                {% if s.bukti_pembayaran %}
-                    <a href="{{ url_for('static', filename='uploads/' + s.bukti_pembayaran) }}" target="_blank">Lihat Bukti Pembayaran</a>
-                {% endif %}
-                {% if s.rapor_file %}
-                    <a href="{{ url_for('static', filename='uploads/' + s.rapor_file) }}" target="_blank">Lihat Rapor</a>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
+                <!-- File Upload Section -->
+                <div class="file-upload-section">
+                    <div class="file-group">
+                        <label for="ijazah">
+                            <i class="fas fa-file-pdf"></i> Ijazah (PDF/JPG/PNG):
+                        </label>
+                        <input type="file" name="ijazah" id="ijazah" accept=".pdf,.jpg,.jpeg,.png" required>
+                    </div>
+                    <div class="file-group">
+                        <label for="bukti_pembayaran">
+                            <i class="fas fa-receipt"></i> Bukti Pembayaran:
+                        </label>
+                        <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" accept=".pdf,.jpg,.jpeg,.png" required>
+                    </div>
+                    <div class="file-group">
+                        <label for="rapor">
+                            <i class="fas fa-file-alt"></i> Nilai Rapor:
+                        </label>
+                        <input type="file" name="rapor" id="rapor" accept=".pdf,.jpg,.jpeg,.png" required>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-paper-plane"></i> Kirim Data
+                    </button>
+                    <button type="reset" class="btn-reset">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Data Display Section -->
+        <div class="data-panel">
+            <h3>Data Pendaftaran</h3>
+            {% if siswa_data %}
+                <div class="data-cards">
+                    {% for s in siswa_data %}
+                        <div class="data-card">
+                            <div class="data-header">
+                                <h4>{{ s.nama }}</h4>
+                                <span class="status-badge {{ s.status }}">{{ s.status }}</span>
+                            </div>
+                            <div class="data-body">
+                                <p><strong>Asal Sekolah:</strong> {{ s.asal_sekolah }}</p>
+                                <p><strong>Tempat Lahir:</strong> {{ s.tempat_lahir }}</p>
+                                <p><strong>Nilai:</strong> {{ s.nilai }}</p>
+                            </div>
+                            <div class="document-links">
+                                {% if s.ijazah_file %}
+                                    <a href="{{ url_for('static', filename='uploads/' + s.ijazah_file) }}" target="_blank" class="doc-link">
+                                        <i class="fas fa-file-pdf"></i> Ijazah
+                                    </a>
+                                {% endif %}
+                                {% if s.bukti_pembayaran %}
+                                    <a href="{{ url_for('static', filename='uploads/' + s.bukti_pembayaran) }}" target="_blank" class="doc-link">
+                                        <i class="fas fa-receipt"></i> Bukti Bayar
+                                    </a>
+                                {% endif %}
+                                {% if s.rapor_file %}
+                                    <a href="{{ url_for('static', filename='uploads/' + s.rapor_file) }}" target="_blank" class="doc-link">
+                                        <i class="fas fa-file-alt"></i> Rapor
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-data">
+                    <i class="fas fa-inbox"></i>
+                    <p>Belum ada data pendaftaran</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

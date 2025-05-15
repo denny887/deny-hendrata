@@ -5,99 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PPDB SMK KARYA BANGSA</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="logo-container">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" 
-                 onerror="this.onerror=null; this.src='{{ url_for('static', filename='logo.png') }}'"
-                 alt="Logo SMK KARYA BANGSA">
-            <h1>Sistem PPDB SMK KARYA BANGSA 2025</h1>
-            <p class="tagline">Menyiapkan Generasi Emas untuk Masa Depan</p>
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+            <div class="header-text">
+                <h1>SMK KARYA BANGSA SINTANG</h1>
+                <p class="tagline">Pendidikan Berkualitas untuk Masa Depan Cemerlang</p>
+            </div>
         </div>
     </header>
 
-    <nav>
-        <div class="nav-links">
-            <a href="{{ url_for('index') }}">Beranda</a>
-            {% if not session.get('user_id') %}
-                <a href="{{ url_for('register') }}">Daftar</a>
-                <a href="{{ url_for('login') }}" class="btn-user">Login Siswa</a>
-                <a href="{{ url_for('admin_login') }}" class="btn-admin-nav">Login Admin</a>
-                <div class="dropdown">
-                    <button class="dropbtn">PPDB Yayasan Karya Bangsa</button>
-                    <div class="dropdown-content school-links">
-                        <div class="school-section">
-                            <h4>SMK Karya Bangsa</h4>
-                            <p>Program: PPLG, HOTEL, TBSM</p>
-                            <a href="{{ url_for('index') }}" class="school-link current">Daftar SMK</a>
-                        </div>
-                        <div class="school-section">
-                            <h4>SMA Karya Bangsa</h4>
-                            <p>Program: IPA, IPS</p>
-                            <a href="https://sma.karyabangsa.sch.id" class="school-link">Daftar SMA</a>
-                        </div>
-                        <div class="school-section">
-                            <h4>SMP Karya Bangsa</h4>
-                            <p>Akreditasi: A</p>
-                            <a href="https://smp.karyabangsa.sch.id" class="school-link">Daftar SMP</a>
-                        </div>
-                        <div class="school-section">
-                            <h4>SD Karya Bangsa</h4>
-                            <p>Akreditasi: A</p>
-                            <a href="https://sd.karyabangsa.sch.id" class="school-link">Daftar SD</a>
+    <div class="nav-container">
+        <nav>
+            <div class="nav-links">
+                <a href="{{ url_for('main.index') }}">Beranda</a>
+                {% if not session.get('user_id') %}
+                    <div class="dropdown">
+                        <button class="dropbtn">PPDB Yayasan Karya Bangsa</button>
+                        <div class="dropdown-content school-links">
+                            <div class="school-section">
+                                <h4>SMK Karya Bangsa</h4>
+                                <p>Program: PPLG, HOTEL, TBSM</p>
+                                <a href="{{ url_for('main.index') }}" class="school-link current">Daftar SMK</a>
+                            </div>
+                            <div class="school-section">
+                                <h4>SMA Karya Bangsa</h4>
+                                <p>Program: IPA, IPS</p>
+                                <a href="https://smastg.karyabangsa.sch.id" class="school-link">Daftar SMA</a>
+                            </div>
+                            <div class="school-section">
+                                <h4>SMP Karya Bangsa</h4>
+                                <p>Akreditasi: A</p>
+                                <a href="https://karyabangsa.sch.id/smp-karya-bangsa" class="school-link">Daftar SMP</a>
+                            </div>
+                            <div class="school-section">
+                                <h4>SD Karya Bangsa</h4>
+                                <p>Akreditasi: A</p>
+                                <a href="https://karyabangsa.sch.id/sd-karya-bangsa-sintang" class="school-link">Daftar SD</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% elif session.get('role') == 'admin' %}
-                <a href="{{ url_for('admin.dashboard') }}">Dashboard Admin</a>
-                <div class="dropdown">
-                    <button class="dropbtn">Pengaturan</button>
-                    <div class="dropdown-content">
-                        <a href="{{ url_for('admin.settings') }}">Pengaturan PPDB</a>
-                        <a href="{{ url_for('admin.school_settings') }}">Pengaturan Sekolah</a>
+                    <a href="{{ url_for('auth.register') }}">Daftar</a>
+                    <a href="{{ url_for('auth.login') }}" class="btn-user">Login Siswa</a>
+                    <a href="{{ url_for('auth.admin_login') }}" class="btn-admin-nav">Login Admin</a>
+                {% elif session.get('role') == 'admin' %}
+                    <a href="{{ url_for('admin.dashboard') }}">Dashboard Admin</a>
+                    <div class="dropdown">
+                        <button class="dropbtn">Pengaturan</button>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('admin.settings') }}">Pengaturan PPDB</a>
+                        </div>
                     </div>
-                </div>
-            {% else %}
-                <a href="{{ url_for('user.dashboard') }}">Dashboard Siswa</a>
-                <div class="dropdown">
-                    <button class="dropbtn">PPDB Yayasan Karya Bangsa</button>
-                    <div class="dropdown-content">
-                        <a href="{{ url_for('index') }}">SMK Karya Bangsa</a>
-                        <a href="https://sma.karyabangsa.sch.id">SMA Karya Bangsa</a>
-                        <a href="https://smp.karyabangsa.sch.id">SMP Karya Bangsa</a>
-                        <a href="https://sd.karyabangsa.sch.id">SD Karya Bangsa</a>
+                {% else %}
+                    <a href="{{ url_for('user.dashboard') }}">Dashboard Siswa</a>
+                    <div class="dropdown">
+                        <button class="dropbtn">PPDB Yayasan Karya Bangsa</button>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('main.index') }}">SMK Karya Bangsa</a>
+                            <a href="https://smastg.karyabangsa.sch.id">SMA Karya Bangsa</a>
+                            <a href="https://karyabangsa.sch.id/smp-karya-bangsa">SMP Karya Bangsa</a>
+                            <a href="https://karyabangsa.sch.id/sd-karya-bangsa-sintang">SD Karya Bangsa</a>
+                            <a href="https://karyabangsa.sch.id">Website Home</a>
+                        </div>
                     </div>
-                </div>
-            {% endif %}
-        </div>
-    </nav>
-
-    <div class="container">
-        {% block content %}
-        {% endblock %}
+                {% endif %}
+            </div>
+        </nav>
     </div>
+
+    {% block content %}
+    {% endblock %}
 
     <footer>
         <div class="footer-content">
             <div class="footer-section contact">
                 <h4>Kontak Kami</h4>
                 <p>SMK KARYA BANGSA</p>
-                <p>Jl. Pendidikan No. 123, Kebumen</p>
+                <p>Jl. Pontianak - Sintang Km. 7, 78616 Sintang, Kalimantan Barat</p>
                 <p><i class="phone-icon"></i> 081549395400</p>
-                <p><i class="business-icon"></i> (0655) 7728656</p>
-                <p>Email: info@smkkaryabangsa.sch.id</p>
+                <p><i class="business-icon"></i> (0565) 21855</p>
+                <p>Email: ppdb@smkkaryabangsa-stg.sch.id</p>
             </div>
             <div class="footer-section social">
                 <h4>Media Sosial</h4>
                 <div class="social-links">
-                    <a href="https://instagram.com/smkkaryabangsa" target="_blank" class="social-link">
+                    <a href="https://instagram.com/karyabangsa.stg" target="_blank" class="social-link">
                         <img src="{{ url_for('static', filename='icons/instagram.png') }}" alt="Instagram">
-                        <span>@smkkaryabangsa</span>
+                        <span>@karyabangsa.stg</span>
                     </a>
-                    <a href="mailto:info@smkkaryabangsa.sch.id" class="social-link">
+                    <a href="mailto:ppdb@smkkaryabangsa-stg.sch.id" class="social-link">
                         <img src="{{ url_for('static', filename='icons/email.png') }}" alt="Email">
-                        <span>info@smkkaryabangsa.sch.id</span>
+                        <span>ppdb@smkkaryabangsa-stg.sch.id</span>
                     </a>
                 </div>
             </div>

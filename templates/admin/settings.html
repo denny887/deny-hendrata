@@ -3,92 +3,42 @@
 {% block content %}
 <div class="settings-container">
     <h2>Pengaturan PPDB</h2>
-    <div class="settings-grid">
-        <!-- Pengaturan Sekolah -->
-        <div class="settings-card">
-            <h3>Pengaturan Umum</h3>
-            <form method="POST" action="{{ url_for('admin.update_settings') }}">
-                <div class="form-group">
-                    <label>Status Pendaftaran</label>
-                    <select name="registration_status">
-                        <option value="open" {% if settings.registration_open %}selected{% endif %}>Buka</option>
-                        <option value="closed" {% if not settings.registration_open %}selected{% endif %}>Tutup</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Tahun Ajaran</label>
-                    <input type="text" name="academic_year" value="{{ settings.academic_year }}" required>
-                </div>
-                <div class="form-group">
-                    <label>Kuota Per Jurusan</label>
-                    <input type="number" name="quota_per_major" value="{{ settings.quota_per_major }}" required>
-                </div>
-                <button type="submit" class="btn-primary">Simpan Pengaturan</button>
-            </form>
-        </div>
-
-        <!-- Pengaturan Jurusan -->
-        <div class="settings-card">
-            <h3>Program Keahlian</h3>
-            <form method="POST" action="{{ url_for('admin.update_majors') }}">
-                <div class="major-list">
-                    {% for major in majors %}
-                    <div class="major-item">
-                        <input type="text" name="major_name[]" value="{{ major.name }}">
-                        <input type="number" name="major_quota[]" value="{{ major.quota }}">
-                        <button type="button" class="btn-delete-major">Hapus</button>
-                    </div>
-                    {% endfor %}
-                </div>
-                <button type="button" class="btn-add-major">Tambah Program Keahlian</button>
-                <button type="submit" class="btn-primary">Simpan Program</button>
-            </form>
-        </div>
-
-        <!-- Pengumuman -->
-        <div class="settings-card">
-            <h3>Pengumuman PPDB</h3>
-            <form method="POST" action="{{ url_for('admin.update_announcement') }}">
-                <div class="form-group">
-                    <label>Judul Pengumuman</label>
-                    <input type="text" name="announcement_title" value="{{ settings.announcement_title }}">
-                </div>
-                <div class="form-group">
-                    <label>Isi Pengumuman</label>
-                    <textarea name="announcement_content" rows="5">{{ settings.announcement_content }}</textarea>
-                </div>
-                <div class="form-group">
-                    <label>Status Pengumuman</label>
-                    <select name="announcement_status">
-                        <option value="show" {% if settings.show_announcement %}selected{% endif %}>Tampilkan</option>
-                        <option value="hide" {% if not settings.show_announcement %}selected{% endif %}>Sembunyikan</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-primary">Simpan Pengumuman</button>
-            </form>
-        </div>
+    
+    <div class="settings-card">
+        <h3>Pengaturan Umum</h3>
+        <form method="POST" action="{{ url_for('admin.settings') }}">
+            <div class="form-group">
+                <label>Status Pendaftaran</label>
+                <select name="registration_status">
+                    <option value="open" {% if settings.registration_open %}selected{% endif %}>Buka</option>
+                    <option value="closed" {% if not settings.registration_open %}selected{% endif %}>Tutup</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tahun Ajaran</label>
+                <input type="text" name="academic_year" value="{{ settings.academic_year }}" required>
+            </div>
+            <div class="form-group">
+                <label>Kuota Per Jurusan</label>
+                <input type="number" name="quota_per_major" value="{{ settings.quota_per_major }}" required>
+            </div>
+            <div class="form-group">
+                <label>Judul Pengumuman</label>
+                <input type="text" name="announcement_title" value="{{ settings.announcement_title }}">
+            </div>
+            <div class="form-group">
+                <label>Isi Pengumuman</label>
+                <textarea name="announcement_content" rows="5">{{ settings.announcement_content }}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Status Pengumuman</label>
+                <select name="show_announcement">
+                    <option value="show" {% if settings.show_announcement %}selected{% endif %}>Tampilkan</option>
+                    <option value="hide" {% if not settings.show_announcement %}selected{% endif %}>Sembunyikan</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-primary">Simpan Pengaturan</button>
+        </form>
     </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-document.querySelector('.btn-add-major').addEventListener('click', function() {
-    const majorList = document.querySelector('.major-list');
-    const newMajor = document.createElement('div');
-    newMajor.className = 'major-item';
-    newMajor.innerHTML = `
-        <input type="text" name="major_name[]" placeholder="Nama Program">
-        <input type="number" name="major_quota[]" placeholder="Kuota">
-        <button type="button" class="btn-delete-major">Hapus</button>
-    `;
-    majorList.appendChild(newMajor);
-});
-
-document.querySelector('.major-list').addEventListener('click', function(e) {
-    if (e.target.classList.contains('btn-delete-major')) {
-        e.target.parentElement.remove();
-    }
-});
-</script>
 {% endblock %}
