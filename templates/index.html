@@ -1,101 +1,90 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="hero-section">
-    <div class="hero-content">
-        <h1>Penerimaan Peserta Didik Baru</h1>
-        <h2>SMK KARYA BANGSA</h2>
-        <p class="hero-tagline">Wujudkan Mimpimu Bersama Kami</p>
-        <div class="hero-buttons">
-            <a href="{{ url_for('auth.register') }}" class="btn-hero">Daftar Sekarang</a>
-            <a href="{{ url_for('auth.login') }}" class="btn-hero secondary">Login Siswa</a>
-        </div>
-    </div>
-</div>
-
-<div class="container">
-    <div class="info-cards">
-        <div class="info-card">
-            <div class="card-icon">
-                <i class="fas fa-calendar"></i>
-            </div>
-            <h3>Periode Pendaftaran</h3>
-            <p>1 Januari - 30 Juni 2024</p>
-        </div>
-        <div class="info-card">
-            <div class="card-icon">
-                <i class="fas fa-users"></i>
-            </div>
-            <h3>Kuota Siswa</h3>
-            <p>120 Siswa</p>
-        </div>
-        <div class="info-card">
-            <div class="card-icon">
-                <i class="fas fa-book"></i>
-            </div>
-            <h3>Program Keahlian</h3>
-            <p>3 Jurusan Unggulan</p>
-        </div>
-    </div>
-</div>
-
-<div class="steps-section">
-    <h2>Alur Pendaftaran</h2>
-    <div class="steps-container">
-        <div class="step">
-            <div class="step-number">1</div>
-            <h3>Registrasi Online</h3>
-            <p>Daftar akun dan isi formulir</p>
-        </div>
-        <div class="step">
-            <div class="step-number">2</div>
-            <h3>Upload Dokumen</h3>
-            <p>Unggah persyaratan</p>
-        </div>
-        <div class="step">
-            <div class="step-number">3</div>
-            <h3>Pembayaran</h3>
-            <p>Bayar biaya pendaftaran</p>
-        </div>
-        <div class="step">
-            <div class="step-number">4</div>
-            <h3>Verifikasi</h3>
-            <p>Tunggu verifikasi admin</p>
-        </div>
-    </div>
-</div>
-
-<section class="programs-section">
+<div class="hero-banner bg-primary text-white py-5 mb-4">
     <div class="container">
-        <div class="section-title">
-            <h2>Program Keahlian Unggulan</h2>
-            <p>Pilih Jurusan Sesuai Minat dan Bakatmu</p>
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="display-4">Penerimaan Peserta Didik Baru</h1>
+                <h2>Tahun Ajaran 2024/2025</h2>
+                <p class="lead">SMK KARYA BANGSA - Wujudkan Mimpimu Bersama Kami</p>
+                <div class="mt-4">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg me-2">Daftar Sekarang</a>
+                    <a href="#info" class="btn btn-outline-light btn-lg">Info Lebih Lanjut</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/school-hero.png') }}" alt="School" class="img-fluid rounded">
+            </div>
         </div>
-        <div class="programs-grid">
-            <div class="program-card">
-                <img src="{{ url_for('static', filename='programs/RPL.jpg') }}" alt="PPLG">
-                <div class="program-content">
-                    <h3>PPLG</h3>
-                    <p>Pengembangan Perangkat Lunak dan Gim</p>
+    </div>
+</div>
+
+<div class="container" id="info">
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar fa-3x text-primary mb-3"></i>
+                    <h3>Jadwal Pendaftaran</h3>
+                    <p>1 Januari - 30 Juni 2024</p>
                 </div>
             </div>
-            <div class="program-card">
-                <img src="{{ url_for('static', filename='programs/HOTEL.jpg') }}" alt="Perhotelan">
-                <div class="program-content">
-                    <h3>Perhotelan</h3>
-                    <p>Manajemen Perhotelan dan Pariwisata</p>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                    <h3>Kuota Penerimaan</h3>
+                    <p>Total 120 Siswa Baru</p>
                 </div>
             </div>
-            <div class="program-card">
-                <img src="{{ url_for('static', filename='programs/BENGKEL.jpg') }}" alt="TBSM">
-                <div class="program-content">
-                    <h3>TBSM</h3>
-                    <p>Teknik Bisnis Sepeda Motor</p>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
+                    <h3>Program Keahlian</h3>
+                    <p>3 Jurusan Unggulan</p>
                 </div>
             </div>
         </div>
     </div>
-</section>
+
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2>Alur Pendaftaran</h2>
+        </div>
+        <div class="col-12">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>1. Registrasi Online</h4>
+                        <p>Daftar akun dan lengkapi data</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>2. Upload Berkas</h4>
+                        <p>Unggah dokumen yang diperlukan</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>3. Pembayaran</h4>
+                        <p>Lakukan pembayaran biaya pendaftaran</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>4. Verifikasi</h4>
+                        <p>Tunggu verifikasi dari admin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

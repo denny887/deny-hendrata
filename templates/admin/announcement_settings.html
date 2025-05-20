@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="settings-panel">
+        <h2 class="mb-4">Pengaturan Pengumuman</h2>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="settings-form">
+            <div class="mb-3">
+                <label for="announcement_title" class="form-label">Judul Pengumuman:</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="announcement_title" 
+                       name="announcement_title"
+                       value="{{ settings.announcement_title if settings else '' }}" 
+                       required>
+            </div>
+
+            <div class="mb-3">
+                <label for="announcement_content" class="form-label">Isi Pengumuman:</label>
+                <textarea class="form-control" 
+                          id="announcement_content" 
+                          name="announcement_content" 
+                          rows="6" 
+                          required>{{ settings.announcement_content if settings else '' }}</textarea>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" 
+                       class="form-check-input" 
+                       id="show_announcement" 
+                       name="show_announcement"
+                       {% if settings and settings.show_announcement %}checked{% endif %}>
+                <label class="form-check-label" for="show_announcement">
+                    Tampilkan Pengumuman
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+        </form>
+    </div>
+</div>
+
+<style>
+.settings-panel {
+    background: white;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.settings-form {
+    max-width: 800px;
+}
+</style>
+{% endblock %}

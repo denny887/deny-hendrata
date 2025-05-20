@@ -3,11 +3,56 @@
 {% block content %}
     <div class="dashboard-container">
         <div class="dashboard-header">
-            <h2>Dashboard Calon Siswa</h2>
+            <div class="logo-dashboard" style="display:flex;align-items:center;gap:16px;">
+                <img src="{{ url_for('static', filename='images/LOGO_KARSA.png') }}" alt="Logo SMK Karya Bangsa" style="height:60px;width:auto;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);background:#fff;padding:4px;">
+                <h2 style="margin:0;">Dashboard Calon Siswa</h2>
+            </div>
             <a href="{{ url_for('auth.logout') }}" class="btn-logout">
                 <i class="logout-icon"></i>
                 Logout
             </a>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Registration Progress Section -->
+        <div class="progress-section">
+            <h3>Progress Pendaftaran</h3>
+            <div class="progress-bar">
+                <div class="progress" style="width: 
+                    {% if siswa_data and siswa_data[0].status == 'approved' %}
+                        100%
+                    {% elif siswa_data and siswa_data[0].bukti_pembayaran %}
+                        60%
+                    {% elif siswa_data %}
+                        20%
+                    {% else %}
+                        0%
+                    {% endif %};">
+                    {% if siswa_data and siswa_data[0].status == 'approved' %}
+                        100% - Pendaftaran Diterima
+                    {% elif siswa_data and siswa_data[0].bukti_pembayaran %}
+                        60% - Bukti Pembayaran Diupload
+                    {% elif siswa_data %}
+                        20% - Formulir Terkirim
+                    {% else %}
+                        0% - Belum Lengkap
+                    {% endif %}
+                </div>
+            </div>
+            {% if siswa_data and siswa_data[0].status == 'approved' %}
+                <div class="congrats-message" style="margin-top:18px;padding:16px;background:#e6ffe6;border-radius:8px;text-align:center;">
+                    <strong>Congratulations!</strong> You have been accepted.<br>
+                    <strong>Selamat!</strong> Anda telah diterima.<br>
+                    <span style="color:#2d5a7b;">Please wait for further instructions from the school. Mohon menunggu informasi selanjutnya dari sekolah.</span>
+                </div>
+            {% endif %}
         </div>
 
         <!-- Move QRIS Payment section to top -->
@@ -16,11 +61,7 @@
             <div class="payment-card">
                 <div class="qris-container">
                     <div class="qris-code-wrapper">
-                        <img src="{{ url_for('static', filename='images/qris-code.png') }}" alt="QRIS Code" class="qris-code">
-                        <button class="btn-download">
-                            <i class="download-icon"></i>
-                            Download QRIS
-                        </button>
+                        <img src="{{ url_for('static', filename='images/qris-dinncafe.png') }}" alt="QRIS DINNCAFE" class="qris-code" style="background:#fff;padding:8px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);max-width:220px;">
                     </div>
                     <div class="payment-details">
                         <div class="payment-amount">
@@ -47,16 +88,6 @@
                                 <li>Upload bukti pembayaran di bawah ini</li>
                             </ol>
                         </div>
-                        <div class="upload-payment">
-                            <form method="POST" enctype="multipart/form-data" class="payment-form">
-                                <div class="form-group">
-                                    <label for="bukti_pembayaran">Upload Bukti Pembayaran:</label>
-                                    <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" 
-                                           accept=".pdf,.jpg,.jpeg,.png" required>
-                                </div>
-                                <button type="submit" class="btn-submit-payment">Upload Bukti Pembayaran</button>
-                            </form>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -64,12 +95,11 @@
 
         <div class="form-container">
             <div class="registration-form">
-                <h3>Form Pendaftaran</h3>
-                <form method="POST" enctype="multipart/form-data" class="needs-validation">
+                <h3>Form Pendaftaran dan Pembayaran</h3>
+                <form method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="nama">Nama Lengkap:</label>
-                        <input type="text" name="nama" id="nama" pattern="[A-Za-z\s]{3,50}" 
-                               title="Nama harus berupa huruf (3-50 karakter)" required>
+                        <input type="text" name="nama" id="nama" required>
                     </div>
                     <div class="form-group">
                         <label for="asal_sekolah">Asal Sekolah:</label>
@@ -84,6 +114,15 @@
                         <input type="number" name="nilai" id="nilai" required>
                     </div>
                     <div class="form-group">
+                        <label for="jurusan">Pilih Jurusan:</label>
+                        <select name="jurusan" id="jurusan" required>
+                            <option value="">-- Pilih Jurusan --</option>
+                            <option value="PPLG">PPLG (Pengembangan Perangkat Lunak dan Gim)</option>
+                            <option value="Perhotelan">Perhotelan</option>
+                            <option value="TBSM">TBSM (Teknik Bisnis Sepeda Motor)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="ijazah">Ijazah (PDF/JPG/PNG):</label>
                         <input type="file" name="ijazah" id="ijazah" accept=".pdf,.jpg,.jpeg,.png" required>
                     </div>
@@ -91,11 +130,18 @@
                         <label for="rapor">Nilai Rapor (PDF/JPG/PNG):</label>
                         <input type="file" name="rapor" id="rapor" accept=".pdf,.jpg,.jpeg,.png" required>
                     </div>
+                    <div class="form-group">
+                        <label for="bukti_pembayaran">Upload Bukti Pembayaran:</label>
+                        <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" accept=".pdf,.jpg,.jpeg,.png" required>
+                    </div>
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">Kirim Data</button>
-                        <button type="reset" class="btn btn-secondary">Reset</button>
                     </div>
                 </form>
+                <div class="thanks-message" style="margin-top:18px;padding:14px;background:#eaf6ff;border-radius:8px;text-align:center;">
+                    <strong>Terima kasih telah mendaftar di SMK Karya Bangsa!</strong><br>
+                    <span style="color:#2d5a7b;">Thank you for registering at SMK Karya Bangsa!</span>
+                </div>
             </div>
         </div>
 
@@ -103,13 +149,10 @@
         <ul>
             {% for s in siswa_data %}
                 <li>
-                    {{ s.nama }} - {{ s.asal_sekolah }} - {{ s.tempat_lahir }} - Nilai: {{ s.nilai }} - Status: {{ s.status }}
+                    {{ s.nama }} - {{ s.asal_sekolah }} - {{ s.tempat_lahir }} - Nilai: {{ s.nilai }} - Jurusan: {{ s.jurusan if s.jurusan else '-' }} - Status: {{ s.status }}
                     <br>
                     {% if s.ijazah_file %}
                         <a href="{{ url_for('static', filename='uploads/' + s.ijazah_file) }}" target="_blank">Lihat Ijazah</a>
-                    {% endif %}
-                    {% if s.bukti_pembayaran %}
-                        <a href="{{ url_for('static', filename='uploads/' + s.bukti_pembayaran) }}" target="_blank">Lihat Bukti Pembayaran</a>
                     {% endif %}
                     {% if s.rapor_file %}
                         <a href="{{ url_for('static', filename='uploads/' + s.rapor_file) }}" target="_blank">Lihat Rapor</a>
@@ -118,105 +161,173 @@
             {% endfor %}
         </ul>
 
-        <div class="chat-section">
-            <h3>Chat dengan Admin</h3>
-            <div class="chat-messages" id="chatMessages">
-                {% for chat in chats %}
-                    <div class="message {% if chat.is_admin %}admin{% else %}user{% endif %}">
-                        <p>{{ chat.message }}</p>
-                        <span class="timestamp">{{ chat.timestamp.strftime('%H:%M %d/%m/%Y') }}</span>
-                    </div>
-                {% endfor %}
+        <!-- Setelah progress bar -->
+        {% if progress == 100 and siswa.status == 'approved' %}
+            <div class="success-message p-4 mb-4 bg-success text-white rounded">
+                <h3><i class="fas fa-check-circle"></i> Selamat!</h3>
+                <p>Anda telah diterima sebagai calon siswa SMK KARYA BANGSA. Terima kasih telah memilih sekolah kami sebagai tempat untuk menuntut ilmu.</p>
+                <p>Silakan tunggu informasi selanjutnya mengenai proses daftar ulang melalui email atau WhatsApp.</p>
             </div>
-            <form method="POST" action="{{ url_for('user.send_message') }}" class="chat-form">
-                <input type="text" name="message" placeholder="Ketik pesan..." required>
-                <button type="submit">Kirim</button>
-            </form>
-        </div>
+        {% elif siswa.status == 'rejected' %}
+            <div class="motivation-message p-4 mb-4 bg-warning rounded">
+                <h3><i class="fas fa-heart"></i> Tetap Semangat!</h3>
+                <p>Jangan putus asa! Setiap kegagalan adalah batu loncatan menuju kesuksesan. 
+                   Masih banyak kesempatan dan pilihan sekolah lain yang menanti.</p>
+                <p>Tetap percaya pada kemampuan diri dan terus berusaha untuk meraih mimpi!</p>
+            </div>
+        {% endif %}
 
-        <div class="dashboard-content">
-            <div class="section vision-mission">
-                <h3>Visi & Misi</h3>
-                <div class="vision">
-                    <h4>Visi</h4>
-                    <p>"Menjadi SMK yang unggul dalam IPTEK berlandaskan IMTAQ, menghasilkan lulusan yang kompeten, berkarakter, dan mampu bersaing di era global"</p>
-                </div>
-                <div class="mission">
-                    <h4>Misi</h4>
-                    <ul>
-                        <li>Meningkatkan kompetensi peserta didik yang berkarakter dan berakhlak mulia</li>
-                        <li>Meningkatkan kualitas pembelajaran berbasis teknologi</li>
-                        <li>Mengembangkan kerjasama dengan dunia usaha dan industri</li>
-                        <li>Menciptakan lingkungan sekolah yang aman, bersih, dan kondusif</li>
-                        <li>Mengembangkan jiwa kewirausahaan dan kemandirian</li>
-                        <li>Meningkatkan profesionalisme tenaga pendidik dan kependidikan</li>
-                        <li>Menyiapkan lulusan yang siap kerja, kuliah, dan berwirausaha</li>
-                    </ul>
-                </div>
-            </div>
+        <style>
+        .success-message, .motivation-message {
+            margin: 2rem 0;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+        }
 
-            <div class="section programs">
-                <h3>Program Keahlian</h3>
-                <div class="program-gallery">
-                    <div class="program-item">
-                        <img src="{{ url_for('static', filename='programs/RPL.jpg') }}" alt="PPLG">
-                        <h4>Pengembangan Perangkat Lunak dan Gim (PPLG)</h4>
-                        <p>Program keahlian yang fokus pada pengembangan aplikasi, website, dan game dengan teknologi terkini.</p>
-                        <ul class="program-features">
-                            <li>Pemrograman Web & Mobile</li>
-                            <li>Desain UI/UX</li>
-                            <li>Game Development</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="program-item">
-                        <img src="{{ url_for('static', filename='programs/HOTEL.jpg') }}" alt="Perhotelan">
-                        <h4>Perhotelan</h4>
-                        <p>Program keahlian yang mempersiapkan siswa untuk industri perhotelan dan hospitality.</p>
-                        <ul class="program-features">
-                            <li>Hotel Operations</li>
-                            <li>Food & Beverage Service</li>
-                            <li>Hospitality Management</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="program-item">
-                        <img src="{{ url_for('static', filename='programs/BENGKEL.jpg') }}" alt="TBSM">
-                        <h4>Teknik Bisnis Sepeda Motor (TBSM)</h4>
-                        <p>Program keahlian yang membekali siswa dengan keterampilan mekanik sepeda motor modern.</p>
-                        <ul class="program-features">
-                            <li>Perawatan Mesin Motor</li>
-                            <li>Sistem Kelistrikan</li>
-                            <li>Manajemen Bengkel</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
 
-            <div class="section location">
-                <h3>Lokasi Kami</h3>
-                <div class="map-container">
-                    <div class="map-info">
-                        <p><i class="location-icon"></i> Pontianak - Sintang Km. 7, 78616 Sintang, Kalimantan Barat</p>
-                        <a href="https://www.bing.com/maps?&ty=18&q=Smk%20Karya%20Bangsa%20Sintang&ss=ypid.YN7999x9687422290527985465&mb=0.036301~111.458498~0.030304~111.46691" 
-                           class="map-link" target="_blank">
-                            <img src="{{ url_for('static', filename='icons/map.png') }}" alt="Map Icon">
-                            Lihat di Maps
-                        </a>
-                    </div>
-                </div>
-            </div>
+        .motivation-message {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+        }
 
-            <div class="section social-feed">
-                <h3>Media Sosial</h3>
-                <div class="instagram-feed">
-                    <a href="https://instagram.com/karyabangsa.stg" target="_blank" class="instagram-link">
-                        <img src="{{ url_for('static', filename='icons/instagram.png') }}" alt="Instagram">
-                        <span>@karyabangsa.stg</span>
-                    </a>
-                </div>
-            </div>
-        </div>
+        .success-icon, .motivation-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .success-icon {
+            color: #28a745;
+        }
+
+        .motivation-icon {
+            color: #ffc107;
+        }
+
+        .congratulation-box, .motivation-box {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(22,69,99,0.08);
+        }
+
+        .progress-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            height: 24px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(45deg, #2C88D9, #164563);
+            border-radius: 12px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #2C88D9;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(44,136,217,0.1);
+        }
+
+        .file-upload-section {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+            margin: 1.5rem 0;
+        }
+
+        .btn-submit {
+            background: #164563;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #2C88D9;
+            transform: translateY(-2px);
+        }
+
+        .status-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #34d399;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #f87171;
+        }
+        </style>
     </div>
 {% endblock %}
 

@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="announcement-section">
+        <h2 class="text-center mb-5" style="color:#164563;">Pengumuman PPDB</h2>
+
+        {% if settings and settings.show_announcement %}
+            <div class="announcement-card" style="background:white;border-radius:12px;padding:2rem;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                <h3 style="color:#2C88D9;margin-bottom:1rem;">{{ settings.announcement_title }}</h3>
+                <div class="announcement-content">
+                    {{ settings.announcement_content | safe }}
+                </div>
+                {% if settings.registration_open %}
+                    <div class="alert alert-success mt-4">
+                        <i class="fas fa-info-circle"></i>
+                        Pendaftaran sedang dibuka untuk tahun ajaran {{ settings.academic_year }}
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Daftar Sekarang
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning mt-4">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Pendaftaran untuk tahun ajaran {{ settings.academic_year }} sudah ditutup
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="no-announcement text-center">
+                <i class="fas fa-inbox fa-3x mb-3" style="color:#164563;"></i>
+                <h3>Belum ada pengumuman</h3>
+                <p>Silakan cek kembali nanti.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Jadwal PPDB Section -->
+    <div class="schedule-section mt-5">
+        <h3 class="text-primary mb-4">Jadwal PPDB 2024/2025</h3>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="date">1 - 31 Januari 2024</div>
+                <div class="event">Pendaftaran Gelombang 1</div>
+            </div>
+            <div class="timeline-item">
+                <div class="date">1 - 28 Februari 2024</div>
+                <div class="event">Pendaftaran Gelombang 2</div>
+            </div>
+            <div class="timeline-item">
+                <div class="date">1 - 31 Maret 2024</div>
+                <div class="event">Pendaftaran Gelombang 3</div>
+            </div>
+            <div class="timeline-item">
+                <div class="date">15 April 2024</div>
+                <div class="event">Pengumuman Hasil Seleksi</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daftar Siswa Section -->
+    <div class="results-section mt-5">
+        {% if settings and settings.show_results %}
+            <!-- Siswa Diterima -->
+            <div class="accepted-students mb-4">
+                <h3 class="text-success mb-3">Daftar Siswa Diterima</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="bg-success text-white">
+                            <tr>
+                                <th>Nama</th>
+                                <th>Asal Sekolah</th>
+                                <th>Jurusan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for siswa in approved_students %}
+                            <tr>
+                                <td>{{ siswa.nama }}</td>
+                                <td>{{ siswa.asal_sekolah }}</td>
+                                <td>{{ siswa.jurusan }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center">Belum ada siswa yang diterima</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pesan Motivasi untuk yang Tidak Diterima -->
+            <div class="motivation-message mt-4 p-4 bg-light rounded">
+                <h4 class="text-warning mb-3">Untuk Yang Belum Diterima</h4>
+                <p class="mb-0">Jangan berkecil hati! Setiap kegagalan adalah batu loncatan menuju kesuksesan. 
+                Tetap semangat dan terus berjuang untuk meraih mimpimu. Masih banyak kesempatan yang menanti di depan!</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.timeline {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.timeline-item {
+    display: flex;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.timeline-item .date {
+    font-weight: bold;
+    color: var(--primary-color);
+    min-width: 200px;
+}
+
+.timeline-item .event {
+    color: var(--text-dark);
+}
+
+.motivation-message {
+    border-left: 5px solid #ffc107;
+}
+</style>
+{% endblock %}

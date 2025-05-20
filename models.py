@@ -19,6 +19,7 @@ class Siswa(db.Model):
     ijazah_file = db.Column(db.String(255))
     bukti_pembayaran = db.Column(db.String(255))
     rapor_file = db.Column(db.String(255))
+    jurusan = db.Column(db.String(100))  # Tambahan field jurusan
 
 class Chat(db.Model):
     id = db.Column(db.Integer, primary_key=True)

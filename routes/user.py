@@ -17,48 +17,92 @@ def dashboard():
         
     if request.method == 'POST':
         try:
-            # Validate input
+            # Validasi input
             nama = request.form.get('nama')
             if not re.match(r'^[a-zA-Z\s]{3,50}$', nama):
-                flash('Nama tidak valid', 'error')
+                flash('Nama tidak valid. Harus berupa huruf dan panjang 3-50 karakter.', 'error')
                 return redirect(url_for('user.dashboard'))
                 
-            files = {'ijazah': request.files.get('ijazah'),
-                    'bukti_pembayaran': request.files.get('bukti_pembayaran'),
-                    'rapor': request.files.get('rapor')}
+            files = {
+                'ijazah_file': request.files.get('ijazah'),
+                'bukti_pembayaran': request.files.get('bukti_pembayaran'),
+                'rapor_file': request.files.get('rapor')
+            }
             
             file_paths = {}
-            for file_type, file in files.items():
+            for field, file in files.items():
                 if file and allowed_file(file.filename):
-                    filename = secure_filename(f"{session['user_id']}_{file_type}_{file.filename}")
+                    filename = secure_filename(f"{session['user_id']}_{field}_{file.filename}")
                     filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-                    file.save(filepath)
-                    file_paths[f"{file_type}_file"] = filename
-                else:
-                    flash(f'File {file_type} tidak valid', 'error')
+                    try:
+                        file.save(filepath)
+                        file_paths[field] = filename
+                    except Exception as e:
+                        flash(f"Gagal menyimpan file {field}: {str(e)}", 'error')
+                        print(f"Error saat menyimpan file {field}: {str(e)}")
+                        return redirect(url_for('user.dashboard'))
+                elif not file:
+                    flash(f"File {field.replace('_file','').replace('_',' ').title()} wajib diunggah.", 'error')
                     return redirect(url_for('user.dashboard'))
 
-            siswa = Siswa(
-                nama=nama,
-                asal_sekolah=request.form.get('asal_sekolah'),
-                tempat_lahir=request.form.get('tempat_lahir'),
-                nilai=int(request.form.get('nilai')),
-                user_id=session['user_id'],
-                **file_paths
-            )
-            db.session.add(siswa)
+            siswa = Siswa.query.filter_by(user_id=session['user_id']).first()
+            if siswa:
+                # Perbarui data yang sudah ada
+                siswa.nama = nama
+                siswa.asal_sekolah = request.form.get('asal_sekolah')
+                siswa.tempat_lahir = request.form.get('tempat_lahir')
+                siswa.nilai = int(request.form.get('nilai'))
+                for key, value in file_paths.items():
+                    setattr(siswa, key, value)
+            else:
+                # Buat data baru
+                siswa = Siswa(
+                    nama=nama,
+                    asal_sekolah=request.form.get('asal_sekolah'),
+                    tempat_lahir=request.form.get('tempat_lahir'),
+                    nilai=int(request.form.get('nilai')),
+                    user_id=session['user_id'],
+                    **file_paths
+                )
+                db.session.add(siswa)
             db.session.commit()
-            flash('Data berhasil disimpan', 'success')
+            flash('Data berhasil disimpan.', 'success')
             
         except Exception as e:
             db.session.rollback()
-            flash('Terjadi kesalahan, silakan coba lagi', 'error')
+            flash('Terjadi kesalahan saat menyimpan data. Silakan coba lagi.', 'error')
             print(f"Error: {str(e)}")
         
-    siswa_data = Siswa.query.filter_by(user_id=session['user_id']).all()
-    chats = Chat.query.filter_by(user_id=session['user_id']).order_by(Chat.timestamp).all()
+    siswa = Siswa.query.filter_by(user_id=session['user_id']).first()
     
-    return render_template('user/dashboard.html', siswa_data=siswa_data, chats=chats)
+    # Calculate progress and status
+    progress = 0
+    status_text = "Belum Mendaftar"
+    uploaded_files = 0
+    
+    if siswa:
+        if siswa.ijazah_file:
+            uploaded_files += 1
+        if siswa.rapor_file:
+            uploaded_files += 1
+        if siswa.bukti_pembayaran:
+            uploaded_files += 1
+            
+        if siswa.status == 'approved':
+            progress = 100
+            status_text = "Diterima"
+        elif siswa.bukti_pembayaran:
+            progress = 60
+            status_text = "Menunggu Verifikasi"
+        else:
+            progress = 20
+            status_text = "Melengkapi Berkas"
+    
+    return render_template('user/dashboard.html',
+                         siswa=siswa,
+                         progress=progress,
+                         status_text=status_text,
+                         uploaded_files=uploaded_files)
 
 @user.route('/send-message', methods=['POST'])
 def send_message():
