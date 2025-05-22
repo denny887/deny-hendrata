@@ -74,6 +74,7 @@ def dashboard():
             print(f"Error: {str(e)}")
         
     siswa = Siswa.query.filter_by(user_id=session['user_id']).first()
+    chats = Chat.query.filter_by(user_id=session['user_id']).order_by(Chat.timestamp).all()
     
     # Calculate progress and status
     progress = 0
@@ -102,7 +103,8 @@ def dashboard():
                          siswa=siswa,
                          progress=progress,
                          status_text=status_text,
-                         uploaded_files=uploaded_files)
+                         uploaded_files=uploaded_files,
+                         chats=chats)
 
 @user.route('/send-message', methods=['POST'])
 def send_message():

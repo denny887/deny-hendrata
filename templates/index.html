@@ -1,20 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="hero-banner bg-primary text-white py-5 mb-4">
+<div class="hero-banner text-white py-5 mb-4"
+     style="background: linear-gradient(120deg,rgba(44,136,217,0.93) 60%,rgba(22,69,99,0.92) 100%), url('{{ url_for('static', filename='images/gedung_baru.jpg') }}') center center/cover no-repeat; min-height: 480px;">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6">
-                <h1 class="display-4">Penerimaan Peserta Didik Baru</h1>
-                <h2>Tahun Ajaran 2024/2025</h2>
-                <p class="lead">SMK KARYA BANGSA - Wujudkan Mimpimu Bersama Kami</p>
+                <h1 class="display-4"
+                    style="font-family:'Montserrat', 'Poppins', Arial, Helvetica, sans-serif;
+                           color:#fff;
+                           text-shadow:2px 2px 0 #2C88D9,0 2px 8px #164563;
+                           font-weight:800; letter-spacing:1px;">
+                    Penerimaan Peserta Didik Baru
+                </h1>
+                <h2 style="font-family:'Montserrat', 'Poppins', Arial, Helvetica, sans-serif;
+                           color:#ffd700;
+                           text-shadow:1px 1px 0 #164563,0 2px 8px #2C88D9;
+                           font-weight:700;">
+                    Tahun Ajaran 2024/2025
+                </h2>
+                <p class="lead"
+                   style="font-family:'Montserrat', 'Poppins', Arial, Helvetica, sans-serif;
+                          color:#ffd700;
+                          text-shadow:1px 1px 0rgb(193, 202, 207),0 2px 8pxrgb(212, 222, 230);
+                          font-weight:600;">
+                    SMK KARYA BANGSA - Wujudkan Mimpimu Bersama Kami
+                </p>
                 <div class="mt-4">
-                    <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg me-2">Daftar Sekarang</a>
-                    <a href="#info" class="btn btn-outline-light btn-lg">Info Lebih Lanjut</a>
+                    <a href="{{ url_for('auth.register') }}"
+                       class="btn btn-primary btn-lg me-2"
+                       style="background:#ffd700;border:none;font-family:'Montserrat', 'Poppins', Arial, Helvetica, sans-serif;font-weight:700;color:#164563;">
+                        Daftar Sekarang
+                    </a>
+                    <a href="#info"
+                       class="btn btn-outline-primary btn-lg"
+                       style="color:#164563 !important;border-color:#ffd700 !important;background:rgba(255,255,255,0.85);font-family:'Montserrat', 'Poppins', Arial, Helvetica, sans-serif;font-weight:700;">
+                        Info Lebih Lanjut
+                    </a>
                 </div>
             </div>
             <div class="col-md-6">
-                <img src="{{ url_for('static', filename='images/school-hero.png') }}" alt="School" class="img-fluid rounded">
+                <img src="{{ url_for('static', filename='images/gedung_baru.jpg') }}" alt="Gedung Baru" class="img-fluid rounded shadow" style="margin-top:16px;max-width:100%;border:5px solid #2C88D9;box-shadow:0 8px 32px #2c88d91a;">
             </div>
         </div>
     </div>
@@ -51,6 +77,7 @@
         </div>
     </div>
 
+    <!-- Perbaiki Alur Pendaftaran -->
     <div class="row mb-5">
         <div class="col-12 text-center mb-4">
             <h2>Alur Pendaftaran</h2>
@@ -84,7 +111,118 @@
             </div>
         </div>
     </div>
+
+    <!-- Program Keahlian Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2>Program Keahlian Unggulan</h2>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-4 col-md-6 mb-4 d-flex">
+                <div class="card h-100 shadow-sm program-card w-100 d-flex flex-column">
+                    <div class="program-img-wrapper" style="background:#f8fafc;padding:12px;border-radius:12px 12px 0 0;">
+                        <img src="{{ url_for('static', filename='programs/RPL.jpg') }}" alt="PPLG" class="card-img-top mx-auto d-block"
+                             style="height:180px;object-fit:cover;width:100%;max-width:320px;border-radius:10px;">
+                    </div>
+                    <div class="card-body text-center flex-grow-1 d-flex flex-column justify-content-between">
+                        <h4 class="card-title">PPLG (Pengembangan Perangkat Lunak & Gim)</h4>
+                        <p class="card-text">Belajar coding, software, dan pembuatan game modern.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4 d-flex">
+                <div class="card h-100 shadow-sm program-card w-100 d-flex flex-column">
+                    <div class="program-img-wrapper" style="background:#f8fafc;padding:12px;border-radius:12px 12px 0 0;">
+                        <img src="{{ url_for('static', filename='programs/HOTEL.jpg') }}" alt="Perhotelan" class="card-img-top mx-auto d-block"
+                             style="height:180px;object-fit:cover;width:100%;max-width:320px;border-radius:10px;">
+                    </div>
+                    <div class="card-body text-center flex-grow-1 d-flex flex-column justify-content-between">
+                        <h4 class="card-title">Perhotelan</h4>
+                        <p class="card-text">Keahlian di bidang hospitality, layanan hotel, dan pariwisata.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4 d-flex">
+                <div class="card h-100 shadow-sm program-card w-100 d-flex flex-column">
+                    <div class="program-img-wrapper" style="background:#f8fafc;padding:12px;border-radius:12px 12px 0 0;">
+                        <img src="{{ url_for('static', filename='programs/BENGKEL.jpg') }}" alt="TBSM" class="card-img-top mx-auto d-block"
+                             style="height:180px;object-fit:cover;width:100%;max-width:320px;border-radius:10px;">
+                    </div>
+                    <div class="card-body text-center flex-grow-1 d-flex flex-column justify-content-between">
+                        <h4 class="card-title">TBSM (Teknik Bisnis Sepeda Motor)</h4>
+                        <p class="card-text">Teknik otomotif, perbengkelan, dan bisnis sepeda motor.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimoni Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2>Testimoni Alumni & Orang Tua</h2>
+            <p class="text-muted">Apa kata mereka tentang SMK Karya Bangsa?</p>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <p class="fst-italic">"SMK Karya Bangsa membekali saya dengan ilmu dan keterampilan yang sangat berguna di dunia kerja."</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <img src="{{ url_for('static', filename='images/testi1.jpg') }}" alt="Alumni 1" class="rounded-circle me-3" style="width:56px;height:56px;object-fit:cover;">
+                        <div>
+                            <strong>Rina Sari</strong><br>
+                            Alumni PPLG 2022
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <p class="fst-italic">"Guru-gurunya ramah dan fasilitasnya lengkap. Anak saya sangat berkembang di sini."</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <img src="{{ url_for('static', filename='images/testi2.jpg') }}" alt="Orang Tua" class="rounded-circle me-3" style="width:56px;height:56px;object-fit:cover;">
+                        <div>
+                            <strong>Bapak Andi</strong><br>
+                            Orang Tua Siswa
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <p class="fst-italic">"Saya diterima kerja sebelum lulus berkat program magang dari sekolah."</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <img src="{{ url_for('static', filename='images/testi3.jpg') }}" alt="Alumni 2" class="rounded-circle me-3" style="width:56px;height:56px;object-fit:cover;">
+                        <div>
+                            <strong>Yusuf Pratama</strong><br>
+                            Alumni TBSM 2021
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Tambahkan Montserrat dari Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Tambahan styling untuk program card */
+body {
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+    background: linear-gradient(120deg, #eaf6ff 0%, #b8d8f6 100%);
+}
+.hero-banner h1, .hero-banner h2, .hero-banner .lead {
+    font-family: 'Montserrat', 'Poppins', Arial, Helvetica, sans-serif !important;
+}
+.btn-outline-primary.btn-lg {
+    border-width: 2px;
+}
+</style>
 {% endblock %}
 
 {% block scripts %}

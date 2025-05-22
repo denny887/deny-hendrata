@@ -26,73 +26,85 @@
             <h3>Progress Pendaftaran</h3>
             <div class="progress-bar">
                 <div class="progress" style="width: 
-                    {% if siswa_data and siswa_data[0].status == 'approved' %}
+                    {% if siswa and siswa.status == 'approved' %}
                         100%
-                    {% elif siswa_data and siswa_data[0].bukti_pembayaran %}
+                    {% elif siswa and siswa.bukti_pembayaran %}
                         60%
-                    {% elif siswa_data %}
+                    {% elif siswa %}
                         20%
                     {% else %}
                         0%
                     {% endif %};">
-                    {% if siswa_data and siswa_data[0].status == 'approved' %}
+                    {% if siswa and siswa.status == 'approved' %}
                         100% - Pendaftaran Diterima
-                    {% elif siswa_data and siswa_data[0].bukti_pembayaran %}
+                    {% elif siswa and siswa.bukti_pembayaran %}
                         60% - Bukti Pembayaran Diupload
-                    {% elif siswa_data %}
+                    {% elif siswa %}
                         20% - Formulir Terkirim
                     {% else %}
                         0% - Belum Lengkap
                     {% endif %}
                 </div>
             </div>
-            {% if siswa_data and siswa_data[0].status == 'approved' %}
-                <div class="congrats-message" style="margin-top:18px;padding:16px;background:#e6ffe6;border-radius:8px;text-align:center;">
-                    <strong>Congratulations!</strong> You have been accepted.<br>
-                    <strong>Selamat!</strong> Anda telah diterima.<br>
-                    <span style="color:#2d5a7b;">Please wait for further instructions from the school. Mohon menunggu informasi selanjutnya dari sekolah.</span>
+            {% if siswa and siswa.status == 'approved' %}
+                <div class="congrats-message">
+                    <strong>Congratulations!</strong> Anda telah diterima.<br>
+                    <span style="color:#2d5a7b;">Tunggu info selanjutnya dari sekolah.</span>
                 </div>
             {% endif %}
         </div>
 
-        <!-- Move QRIS Payment section to top -->
+        <!-- QRIS Payment Section -->
         <div class="payment-section">
             <h3>Pembayaran PPDB</h3>
             <div class="payment-card">
-                <div class="qris-container">
-                    <div class="qris-code-wrapper">
-                        <img src="{{ url_for('static', filename='images/qris-dinncafe.png') }}" alt="QRIS DINNCAFE" class="qris-code" style="background:#fff;padding:8px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);max-width:220px;">
+                <div class="qris-code-wrapper">
+                    <img src="{{ url_for('static', filename='images/qris-dinncafe.png') }}" alt="QRIS DINNCAFE" class="qris-code"
+                         onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/qris-dinncafe.jpg') }}';">
+                </div>
+                <div class="payment-details">
+                    <div class="payment-amount">
+                        <h4>Total Pembayaran</h4>
+                        <div class="amount">Rp. 200.000</div>
                     </div>
-                    <div class="payment-details">
-                        <div class="payment-amount">
-                            <h4>Total Pembayaran</h4>
-                            <div class="amount">Rp. 200.000</div>
-                        </div>
-                        <div class="payment-info">
-                            <h4>Informasi Pembayaran</h4>
-                            <ul>
-                                <li>Merchant ID: SMK KARYA BANGSA</li>
-                                <li>Diterima di semua bank dan e-wallet</li>
-                                <li>Pembayaran akan diverifikasi otomatis</li>
-                            </ul>
-                        </div>
-                        <div class="payment-steps">
-                            <h4>Cara Pembayaran:</h4>
-                            <ol>
-                                <li>Buka aplikasi e-wallet atau m-banking Anda</li>
-                                <li>Pilih menu Scan QRIS</li>
-                                <li>Scan kode QR di atas</li>
-                                <li>Masukkan nominal sesuai total pembayaran</li>
-                                <li>Periksa detail transaksi</li>
-                                <li>Masukkan PIN/password Anda</li>
-                                <li>Upload bukti pembayaran di bawah ini</li>
-                            </ol>
-                        </div>
+                    <div class="payment-info">
+                        <h4>Informasi Pembayaran</h4>
+                        <ul>
+                            <li>Merchant ID: SMK KARYA BANGSA</li>
+                            <li>Diterima di semua bank dan e-wallet</li>
+                            <li>Pembayaran akan diverifikasi otomatis</li>
+                            <li><b>No. Rekening Bank BRI:</b> 1234 5678 9012 3456</li>
+                        </ul>
+                    </div>
+                    <div class="payment-steps">
+                        <h4>Cara Pembayaran:</h4>
+                        <ol>
+                            <li><b>Via QRIS:</b>
+                                <ul>
+                                    <li>Buka aplikasi e-wallet atau m-banking Anda</li>
+                                    <li>Pilih menu <b>Scan QRIS</b></li>
+                                    <li>Scan kode QR di atas</li>
+                                    <li>Masukkan nominal sesuai total pembayaran</li>
+                                    <li>Periksa detail transaksi</li>
+                                    <li>Masukkan PIN/password Anda</li>
+                                    <li>Simpan bukti pembayaran dan upload pada form di bawah</li>
+                                </ul>
+                            </li>
+                            <li class="mt-2"><b>Via Transfer Bank:</b>
+                                <ul>
+                                    <li>Transfer ke rekening <b>BRI 1234 5678 9012 3456 a.n. SMK KARYA BANGSA</b></li>
+                                    <li>Pastikan nominal sesuai</li>
+                                    <li>Simpan bukti transfer dan upload pada form di bawah</li>
+                                </ul>
+                            </li>
+                        </ol>
                     </div>
                 </div>
             </div>
+        
         </div>
 
+        <!-- Form Section -->
         <div class="form-container">
             <div class="registration-form">
                 <h3>Form Pendaftaran dan Pembayaran</h3>
@@ -100,6 +112,14 @@
                     <div class="form-group">
                         <label for="nama">Nama Lengkap:</label>
                         <input type="text" name="nama" id="nama" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jenis_kelamin">Jenis Kelamin:</label>
+                        <select name="jenis_kelamin" id="jenis_kelamin" required>
+                            <option value="">-- Pilih Jenis Kelamin --</option>
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="asal_sekolah">Asal Sekolah:</label>
@@ -138,38 +158,62 @@
                         <button type="submit" class="btn btn-primary">Kirim Data</button>
                     </div>
                 </form>
-                <div class="thanks-message" style="margin-top:18px;padding:14px;background:#eaf6ff;border-radius:8px;text-align:center;">
+                <div class="thanks-message">
                     <strong>Terima kasih telah mendaftar di SMK Karya Bangsa!</strong><br>
                     <span style="color:#2d5a7b;">Thank you for registering at SMK Karya Bangsa!</span>
                 </div>
             </div>
         </div>
 
-        <h3>Data Anda</h3>
-        <ul>
-            {% for s in siswa_data %}
-                <li>
-                    {{ s.nama }} - {{ s.asal_sekolah }} - {{ s.tempat_lahir }} - Nilai: {{ s.nilai }} - Jurusan: {{ s.jurusan if s.jurusan else '-' }} - Status: {{ s.status }}
-                    <br>
-                    {% if s.ijazah_file %}
-                        <a href="{{ url_for('static', filename='uploads/' + s.ijazah_file) }}" target="_blank">Lihat Ijazah</a>
-                    {% endif %}
-                    {% if s.rapor_file %}
-                        <a href="{{ url_for('static', filename='uploads/' + s.rapor_file) }}" target="_blank">Lihat Rapor</a>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
+        <div class="data-section">
+            <h3>Data Anda</h3>
+            {% if siswa %}
+                <div class="data-card">
+                    <div class="data-header">
+                        <h4>{{ siswa.nama }}</h4>
+                        <span class="status-badge {{ siswa.status }}">{{ siswa.status }}</span>
+                    </div>
+                    <div class="data-body">
+                        <p><strong>Jenis Kelamin:</strong> {{ siswa.jenis_kelamin if siswa.jenis_kelamin else '-' }}</p>
+                        <p><strong>Asal Sekolah:</strong> {{ siswa.asal_sekolah }}</p>
+                        <p><strong>Tempat Lahir:</strong> {{ siswa.tempat_lahir }}</p>
+                        <p><strong>Nilai:</strong> {{ siswa.nilai }}</p>
+                        <p><strong>Jurusan:</strong> {{ siswa.jurusan if siswa.jurusan else '-' }}</p>
+                    </div>
+                    <div class="document-links">
+                        {% if siswa.ijazah_file %}
+                            <a href="{{ url_for('static', filename='uploads/' + siswa.ijazah_file) }}" target="_blank" class="doc-link">
+                                <i class="fas fa-file-pdf"></i> Ijazah
+                            </a>
+                        {% endif %}
+                        {% if siswa.bukti_pembayaran %}
+                            <a href="{{ url_for('static', filename='uploads/' + siswa.bukti_pembayaran) }}" target="_blank" class="doc-link">
+                                <i class="fas fa-receipt"></i> Bukti Bayar
+                            </a>
+                        {% endif %}
+                        {% if siswa.rapor_file %}
+                            <a href="{{ url_for('static', filename='uploads/' + siswa.rapor_file) }}" target="_blank" class="doc-link">
+                                <i class="fas fa-file-alt"></i> Rapor
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="no-data">
+                    <i class="fas fa-inbox"></i>
+                    <p>Belum ada data pendaftaran</p>
+                </div>
+            {% endif %}
+        </div>
 
-        <!-- Setelah progress bar -->
         {% if progress == 100 and siswa.status == 'approved' %}
-            <div class="success-message p-4 mb-4 bg-success text-white rounded">
+            <div class="success-message">
                 <h3><i class="fas fa-check-circle"></i> Selamat!</h3>
                 <p>Anda telah diterima sebagai calon siswa SMK KARYA BANGSA. Terima kasih telah memilih sekolah kami sebagai tempat untuk menuntut ilmu.</p>
                 <p>Silakan tunggu informasi selanjutnya mengenai proses daftar ulang melalui email atau WhatsApp.</p>
             </div>
-        {% elif siswa.status == 'rejected' %}
-            <div class="motivation-message p-4 mb-4 bg-warning rounded">
+        {% elif siswa and siswa.status == 'rejected' %}
+            <div class="motivation-message">
                 <h3><i class="fas fa-heart"></i> Tetap Semangat!</h3>
                 <p>Jangan putus asa! Setiap kegagalan adalah batu loncatan menuju kesuksesan. 
                    Masih banyak kesempatan dan pilihan sekolah lain yang menanti.</p>
@@ -177,42 +221,66 @@
             </div>
         {% endif %}
 
+        <!-- Info/link sekolah Karya Bangsa -->
+        <div class="school-links-section">
+            <h3 style="color:#164563;text-align:center;margin-bottom:1.5rem;">Sekolah Karya Bangsa Lainnya</h3>
+            <div class="school-links">
+                <div class="school-section">
+                    <h4>SMA Karya Bangsa</h4>
+                    <p>Jenjang Sekolah Menengah Atas</p>
+                    <a href="https://sma-karyabangsa.sch.id" target="_blank" class="school-link">Kunjungi Website</a>
+                </div>
+                <div class="school-section">
+                    <h4>SMP Karya Bangsa</h4>
+                    <p>Jenjang Sekolah Menengah Pertama</p>
+                    <a href="https://smp-karyabangsa.sch.id" target="_blank" class="school-link">Kunjungi Website</a>
+                </div>
+                <div class="school-section">
+                    <h4>SD Karya Bangsa</h4>
+                    <p>Jenjang Sekolah Dasar</p>
+                    <a href="https://sd-karyabangsa.sch.id" target="_blank" class="school-link">Kunjungi Website</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Section Siswa -->
+        <div class="chat-section" style="margin:2rem 0;">
+            <h3 style="color:#2C88D9;">Chat dengan Admin</h3>
+            <div class="chat-container" style="background:#f8fafc;border-radius:8px;padding:1rem;max-width:600px;margin:0 auto 1.5rem;">
+                {% set chat_list = namespace(items=[]) %}
+                {% if chats %}
+                    {% set chat_list.items = chats %}
+                {% endif %}
+                <div class="chat-messages" style="max-height:260px;overflow-y:auto;">
+                    {% if chat_list.items %}
+                        {% for chat in chat_list.items %}
+                            <div style="margin-bottom:10px;text-align:{% if chat.is_admin %}right{% else %}left{% endif %};">
+                                <div style="display:inline-block;padding:10px 16px;border-radius:14px;
+                                    background:{% if chat.is_admin %}#2C88D9{% else %}#eaf6ff{% endif %};
+                                    color:{% if chat.is_admin %}#fff{% else %}#164563{% endif %};
+                                    min-width:60px;max-width:80%;">
+                                    {{ chat.message }}
+                                    <div style="font-size:0.85em;color:#888;margin-top:2px;">
+                                        {{ chat.timestamp.strftime('%d/%m %H:%M') }}
+                                        {% if chat.is_admin %}<span style="margin-left:6px;font-weight:600;">Admin</span>{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div style="text-align:center;color:#888;">Belum ada pesan.</div>
+                    {% endif %}
+                </div>
+                <form method="POST" action="{{ url_for('user.send_message') }}" class="chat-form" style="margin-top:1rem;display:flex;gap:8px;">
+                    <input type="text" name="message" placeholder="Ketik pesan ke admin..." required style="flex:1;padding:10px;border-radius:8px;border:1.5px solid #e5e7eb;">
+                    <button type="submit" style="background:#2C88D9;color:#fff;border:none;padding:0 18px;border-radius:8px;font-weight:600;">
+                        <i class="fas fa-paper-plane"></i> Kirim
+                    </button>
+                </form>
+            </div>
+        </div>
+
         <style>
-        .success-message, .motivation-message {
-            margin: 2rem 0;
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .success-message {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-        }
-
-        .motivation-message {
-            background: #fff3cd;
-            border: 1px solid #ffeeba;
-        }
-
-        .success-icon, .motivation-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .success-icon {
-            color: #28a745;
-        }
-
-        .motivation-icon {
-            color: #ffc107;
-        }
-
-        .congratulation-box, .motivation-box {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
         .dashboard-container {
             max-width: 1200px;
             margin: 2rem auto;
@@ -221,7 +289,12 @@
             border-radius: 16px;
             box-shadow: 0 4px 24px rgba(22,69,99,0.08);
         }
-
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
         .progress-section {
             background: white;
             padding: 2rem;
@@ -229,7 +302,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
         }
-
         .progress-bar {
             height: 24px;
             background: #e2e8f0;
@@ -237,7 +309,6 @@
             overflow: hidden;
             margin: 1rem 0;
         }
-
         .progress {
             height: 100%;
             background: linear-gradient(45deg, #2C88D9, #164563);
@@ -249,25 +320,62 @@
             color: white;
             font-weight: 600;
         }
-
+        .congrats-message {
+            margin-top: 18px;
+            padding: 16px;
+            background: #e6ffe6;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .payment-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        .payment-card {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+        }
+        .qris-code-wrapper {
+            flex: 0 0 220px;
+        }
+        .qris-code {
+            background: #fff;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            max-width: 220px;
+            width: 100%;
+            display: block;
+        }
+        .payment-details {
+            flex: 1;
+        }
+        .qris-help {
+            font-size: 0.95em;
+            color: #dc3545;
+            margin-top: 8px;
+        }
         .form-container {
             background: white;
             border-radius: 12px;
             padding: 2rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
         }
-
         .form-group {
             margin-bottom: 1.5rem;
         }
-
         .form-group label {
             display: block;
             color: #374151;
             margin-bottom: 0.5rem;
             font-weight: 500;
         }
-
         .form-group input,
         .form-group select {
             width: 100%;
@@ -277,23 +385,16 @@
             font-size: 1rem;
             transition: all 0.3s ease;
         }
-
         .form-group input:focus,
         .form-group select:focus {
             border-color: #2C88D9;
             outline: none;
             box-shadow: 0 0 0 3px rgba(44,136,217,0.1);
         }
-
-        .file-upload-section {
-            background: #f8fafc;
-            padding: 1.5rem;
-            border-radius: 12px;
-            border: 2px dashed #cbd5e1;
-            margin: 1.5rem 0;
+        .form-actions {
+            margin-top: 1.5rem;
         }
-
-        .btn-submit {
+        .btn.btn-primary {
             background: #164563;
             color: white;
             padding: 0.75rem 1.5rem;
@@ -303,29 +404,117 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
-        .btn-submit:hover {
+        .btn.btn-primary:hover {
             background: #2C88D9;
             transform: translateY(-2px);
         }
-
-        .status-message {
-            padding: 1rem;
+        .thanks-message {
+            margin-top: 18px;
+            padding: 14px;
+            background: #eaf6ff;
             border-radius: 8px;
-            margin: 1rem 0;
             text-align: center;
         }
-
-        .status-approved {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #34d399;
+        .data-section {
+            margin-top: 2rem;
         }
-
-        .status-rejected {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #f87171;
+        .data-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+        .data-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .status-badge.approved { background: #d1fae5; color: #065f46; }
+        .status-badge.rejected { background: #fee2e2; color: #991b1b; }
+        .status-badge.pending { background: #fef3c7; color: #92400e; }
+        .document-links {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .doc-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            background: #2C88D9;
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+        .doc-link:hover {
+            background: #164563;
+            transform: translateY(-1px);
+        }
+        .no-data {
+            text-align: center;
+            color: #888;
+            margin: 2rem 0;
+        }
+        .success-message, .motivation-message {
+            margin: 2rem 0;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .motivation-message {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+        }
+        .school-links-section {
+            margin-top: 2.5rem;
+        }
+        .school-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+        .school-section {
+            background: #fff;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            min-width: 220px;
+            text-align: center;
+        }
+        .school-link {
+            color: #2C88D9;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+        .school-link:hover {
+            color: #164563;
+        }
+        @media (max-width: 991px) {
+            .payment-card { flex-direction: column; gap: 1rem; }
+            .qris-code-wrapper { margin-bottom: 1rem; }
+        }
+        @media (max-width: 600px) {
+            .dashboard-container { padding: 1rem; }
+            .form-container, .payment-section, .progress-section { padding: 1rem; }
+            .data-card { padding: 1rem; }
         }
         </style>
     </div>
