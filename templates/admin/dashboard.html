@@ -108,7 +108,19 @@
                                                 <td>{{ siswa.tempat_lahir }}</td>
                                                 <td>{{ siswa.nilai }}</td>
                                                 <td>{{ siswa.jurusan if siswa.jurusan else '-' }}</td>
-                                                <td>{{ siswa.status }}</td>
+                                                <td>
+                                                    <span class="status-badge {{ siswa.status }}">
+                                                        {% if siswa.status == 'approved' %}
+                                                            Diterima
+                                                        {% elif siswa.status == 'rejected' %}
+                                                            Ditolak
+                                                        {% elif siswa.status == 'pending' %}
+                                                            Menunggu
+                                                        {% else %}
+                                                            {{ siswa.status }}
+                                                        {% endif %}
+                                                    </span>
+                                                </td>
                                                 <td class="document-links">
                                                     {% if siswa.ijazah_file %}
                                                         <a href="{{ url_for('static', filename='uploads/' + siswa.ijazah_file) }}" target="_blank">Ijazah</a>
@@ -218,7 +230,15 @@
                                                 <td>{{ siswa.nilai }}</td>
                                                 <td>
                                                     <span class="status-badge {{ siswa.status }}">
-                                                        {{ siswa.status }}
+                                                        {% if siswa.status == 'approved' %}
+                                                            Diterima
+                                                        {% elif siswa.status == 'rejected' %}
+                                                            Ditolak
+                                                        {% elif siswa.status == 'pending' %}
+                                                            Menunggu
+                                                        {% else %}
+                                                            {{ siswa.status }}
+                                                        {% endif %}
                                                     </span>
                                                 </td>
                                             </tr>

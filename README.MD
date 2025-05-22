@@ -1,5 +1,3 @@
-
-
 ## Struktur Proyek
 
 ![Cuplikan Layar](static/images/Cuplikan%20layar%202025-05-22%20111917.png)
@@ -151,3 +149,56 @@ ppdb-karsa/
 │       ├── login.html
 │       ├── admin_login.html
 │       └── register.html
+
+---
+
+## User Manual
+
+### Untuk Siswa
+
+1. **Registrasi Akun**
+   - Buka halaman utama dan klik tombol "Daftar".
+   - Isi email (gunakan @gmail.com, @yahoo.com, atau @hotmail.com) dan password.
+   - Setelah berhasil daftar, login menggunakan email dan password.
+
+2. **Isi Formulir Pendaftaran**
+   - Setelah login, masuk ke Dashboard Siswa.
+   - Lengkapi data diri: nama, jenis kelamin, asal sekolah, tempat lahir, nilai, jurusan, dan upload dokumen (Fast Foto, Ijazah, Rapor, Bukti Pembayaran).
+   - Klik "Kirim Data" untuk menyimpan.
+
+3. **Cek Status Pendaftaran**
+   - Lihat progress pendaftaran di dashboard.
+   - Status: Menunggu, Diterima, atau Ditolak.
+
+4. **Chat dengan Admin**
+   - Gunakan fitur chat di dashboard untuk bertanya ke admin.
+
+5. **Cek Pengumuman**
+   - Buka menu "Pengumuman" untuk melihat hasil seleksi.
+
+### Untuk Admin
+
+1. **Login Admin**
+   - Buka halaman login admin dan masukkan username serta password admin.
+
+2. **Dashboard Admin**
+   - Lihat statistik pendaftar, data siswa, dan status pendaftaran.
+   - Verifikasi, terima, atau tolak pendaftar.
+   - Hapus data siswa yang ditolak atau pengguna tertentu.
+
+3. **Pengaturan**
+   - Atur pengumuman, status pendaftaran, tahun ajaran, kuota, QRIS, dan jurusan melalui menu pengaturan.
+
+4. **Chat Siswa**
+   - Balas pesan siswa melalui fitur chat admin.
+
+5. **Lihat Log Aktivitas**
+   - Pantau aktivitas sistem di menu log.
+
+---
+
+## Link Terkait
+
+- [SMK Karya Bangsa Sintang](https://karyabangsa.sch.id/smk-karya-bangsa/)
+- [SMP Karya Bangsa Sintang](https://karyabangsa.sch.id/smp-karya-bangsa/)
+- [SD Karya Bangsa Sintang](https://karyabangsa.sch.id/sd-karya-bangsa-sintang/)

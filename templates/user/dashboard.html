@@ -143,6 +143,10 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="foto">Fast Foto (Pas Foto 3x4 JPG/PNG):</label>
+                        <input type="file" name="foto" id="foto" accept=".jpg,.jpeg,.png" required>
+                    </div>
+                    <div class="form-group">
                         <label for="ijazah">Ijazah (PDF/JPG/PNG):</label>
                         <input type="file" name="ijazah" id="ijazah" accept=".pdf,.jpg,.jpeg,.png" required>
                     </div>
@@ -179,6 +183,12 @@
                         <p><strong>Tempat Lahir:</strong> {{ siswa.tempat_lahir }}</p>
                         <p><strong>Nilai:</strong> {{ siswa.nilai }}</p>
                         <p><strong>Jurusan:</strong> {{ siswa.jurusan if siswa.jurusan else '-' }}</p>
+                        {% if siswa.foto %}
+                        <div style="margin-top:1rem;">
+                            <strong>Fast Foto:</strong><br>
+                            <img src="{{ url_for('static', filename='uploads/' + siswa.foto) }}" alt="Fast Foto" style="width:90px;height:120px;object-fit:cover;border-radius:8px;border:2px solid #2C88D9;">
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="document-links">
                         {% if siswa.ijazah_file %}
